@@ -60,23 +60,23 @@ namespace RPGCalendar
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            if (Env.IsProduction())
-            {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.EnableSensitiveDataLogging()
-                        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-                services.AddDbContext<AuthenticationDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AuthConnection")));
-            }
-            else
-            {
+            //if (Env.IsProduction())
+            //{
+            //    services.AddDbContext<ApplicationDbContext>(options =>
+            //        options.EnableSensitiveDataLogging()
+            //            .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //    services.AddDbContext<AuthenticationDbContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("AuthConnection")));
+            //}
+            //else
+            //{
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.EnableSensitiveDataLogging()
                         .UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
                 services.AddDbContext<AuthenticationDbContext>(options =>
                     options.UseSqlite(Configuration.GetConnectionString("AuthConnection")));
 
-            }
+            //}
 
             services
                 .AddDefaultIdentity<ApplicationUser>()
