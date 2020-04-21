@@ -135,7 +135,9 @@ body {
     letter-spacing: 1px;
     text-align: center;
   }
-
+.add {
+  margin:auto;
+}
 input {
   width: 100%;
   margin-bottom: 10px;
