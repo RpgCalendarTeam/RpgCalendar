@@ -2,6 +2,12 @@ a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+  color: white;
+  background-color: black;
+}
+
+.navbar-brand:hover{
+  color: red;
 }
 
 html {
@@ -15,4 +21,22 @@ html {
 
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+.nav-item:active{
+  color:purple;
+}
+
+.navbar{
+  background-color: black;
+}
+
+.container {
+  background-color: black;
+  color: red;
+}
+
+.navbar-nav:hover {
+  
+  color: red;
 }
