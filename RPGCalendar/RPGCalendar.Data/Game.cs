@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
     using GameObjects;
+    using GameCalendar;
 
     public class Game : FingerPrintEntityBase
     {
@@ -29,7 +30,7 @@
         }
         private string _gameSystem = string.Empty;
         public int GameMaster { get; set; }
-        public DateTime GameTime { get; set; }
+        public Calendar? GameTime { get; set; }
 
         //List of game items for game instance
         [NotMapped]
