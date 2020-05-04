@@ -116,10 +116,6 @@ namespace RPGCalendar
                     .AddTransient<ISessionService, SessionService>()
                     .AddTransient<ICalendarService, CalendarService>();
                     
-            services.AddTransient<IPermissionsService<Note>, PermissionsService<Note>>()
-                    .AddTransient<IPermissionsService<Event>, PermissionsService<Event>>()
-                    .AddTransient<IPermissionsService<Item>, PermissionsService<Item>>()
-                    .AddTransient<IPermissionsService<Notification>, PermissionsService<Notification>>();
 
             services.AddTransient<ITimeService, TimeService>();
 

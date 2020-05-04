@@ -9,6 +9,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using GameObjects;
+    using Joins;
     using GameCalendar;
 
     public class ApplicationDbContext : DbContext
@@ -49,11 +50,21 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GameUser>()
+                .HasKey(t => new { t.GameId, t.UserId });
+
+            modelBuilder.Entity<GameUser>()
+                .HasOne(pt => pt.Game)
+                .WithMany(p => p.GameUsers)
+                .HasForeignKey(pt => pt.GameId);
+
+            modelBuilder.Entity<GameUser>()
+                .HasOne(pt => pt.User)
+                .WithMany(t => t.GameUsers)
+                .HasForeignKey(pt => pt.UserId);
             OnCalendarCreating(modelBuilder);
             //    _ = modelBuilder?.Entity<UserGroup>().HasKey(ug => new { ug.UserId, ug.GroupId });
 
-            //    modelBuilder?.Entity<UserGroup>().HasOne(ug => ug.User).WithMany(u => u.UserGroups).HasForeignKey(ug => ug.UserId);
-            //    modelBuilder?.Entity<UserGroup>().HasOne(ug => ug.Group).WithMany(u => u.UserGroups).HasForeignKey(ug => ug.GroupId);
         }
 
         public override int SaveChanges()

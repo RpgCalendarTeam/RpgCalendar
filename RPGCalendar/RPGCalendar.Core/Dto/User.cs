@@ -22,7 +22,6 @@
 
         public string? AuthId { get; set; }
 
-        public ICollection<Game> Games { get; set; } = new List<Game>();
     }
 
     public class User : UserInput, IEntity

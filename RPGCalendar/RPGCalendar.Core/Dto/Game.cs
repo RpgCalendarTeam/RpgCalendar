@@ -12,7 +12,7 @@
         [Required] 
         public string? GameSystem { get; set; }
         [Required]
-        public Calendar? GameCalendar { get; set; }
+        public Calendar? GameTime { get; set; }
     }
     public class Game : GameInput, IEntity
     {

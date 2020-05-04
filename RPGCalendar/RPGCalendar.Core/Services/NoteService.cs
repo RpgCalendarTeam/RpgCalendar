@@ -10,8 +10,8 @@
 
     public class NoteService : GameObjectService<Dto.Note, Dto.NoteInput, Note>, INoteService
     {
-        public NoteService(ApplicationDbContext dbContext, IMapper mapper, IPermissionsService<Note> permissionsService) 
-            : base(dbContext, mapper, permissionsService)
+        public NoteService(ApplicationDbContext dbContext, IMapper mapper,  ISessionService sessionService, IGameService gameService) 
+            : base(dbContext, mapper, sessionService, gameService)
         {
         }
     }
