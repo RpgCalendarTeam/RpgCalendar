@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using Joins;
 
     public class User : FingerPrintEntityBase
     {
@@ -27,7 +28,7 @@
             set => _authId = value ?? throw new ArgumentNullException(nameof(AuthId));
         }
 
-        public ICollection<Game> Games { get; set; } = new HashSet<Game>();
+        public ICollection<GameUser> GameUsers { get; set; } = new List<GameUser>();
 
         public User(string email, string authId)
         {

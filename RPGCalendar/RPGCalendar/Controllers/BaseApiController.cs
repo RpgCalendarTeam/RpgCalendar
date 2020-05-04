@@ -4,6 +4,7 @@ namespace RPGCalendar.Controllers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Core.Exceptions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Core.Services;
@@ -27,49 +28,77 @@ namespace RPGCalendar.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<TDto>> Get(int id)
         {
-            TDto? entity = await Service.FetchByIdAsync(id);
-            if (entity is null)
+            try
             {
-                return NotFound();
-            }
+                TDto? entity = await Service.FetchByIdAsync(id);
+                if (entity is null)
+                {
+                    return NotFound();
+                }
 
-            return Ok(entity);
+                return Ok(entity);
+            }
+            catch (UserPermissionException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<TDto?>> Put(int id, TInputDto value)
         {
-            var result = await Service.UpdateAsync(id, value);
-            if (result is null)
-                return NotFound();
-            return Ok(result);
+            try
+            {
+                var result = await Service.UpdateAsync(id, value);
+                if (result is null)
+                    return NotFound();
+                return Ok(result);
+            }
+            catch (UserPermissionException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<TDto?>> Post(TInputDto entity)
         {
-            var result = await Service.InsertAsync(entity);
-            if(result is null)
+            try
+            {
+                var result = await Service.InsertAsync(entity);
+                return Ok(result);
+            }
+            catch (UserPermissionException)
+            {
                 return Unauthorized();
-            return Ok(result);
-
+            }
         }
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Delete(int id)
         {
-            if (await Service.DeleteAsync(id))
+            try
             {
-                return Ok();
+                if (await Service.DeleteAsync(id))
+                {
+                    return Ok();
+                }
+            }
+            catch (UserPermissionException)
+            {
+                return Unauthorized();
             }
 
             return NotFound();

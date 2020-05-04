@@ -1,4 +1,5 @@
-﻿namespace RPGCalendar.Controllers
+﻿
+namespace RPGCalendar.Controllers.GameObjectControllers
 {
     using Core.Dto;
     using Core.Services;

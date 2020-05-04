@@ -10,8 +10,8 @@
 
     public class ItemService : GameObjectService<Dto.Item, Dto.ItemInput, Item>, IItemService
     {
-        public ItemService(ApplicationDbContext dbContext, IMapper mapper, IPermissionsService<Item> permissionsService)
-            : base(dbContext, mapper, permissionsService)
+        public ItemService(ApplicationDbContext dbContext, IMapper mapper, ISessionService sessionService, IGameService gameService)
+            : base(dbContext, mapper, sessionService, gameService)
         {
         }
     }
