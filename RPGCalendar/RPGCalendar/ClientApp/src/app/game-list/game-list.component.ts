@@ -63,10 +63,6 @@ export class GameListComponent implements OnInit {
       }
     ];
 
-    function deleteRow() {
-      document.getElementById("games").deleteRow(0);
-    }
-
    }
 
   ngOnInit() {
