@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   loginUser(body): Observable<any> {
-    return this.http.post(`${BASEURL}/login`, body);
+    return this.http.post(`${BASEURL}/account`, body);
   }
 
 

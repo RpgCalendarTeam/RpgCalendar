@@ -13,7 +13,9 @@ namespace RPGCalendar.Core.Services
 
     public interface IUserService : IEntityService<Dto.User, Dto.UserInput>
     {
-        public Task<Dto.User> GetUserByAuthId(string authId);
+        public Task<Dto.User?> RegisterUser(UserInput userInput);
+        public Task<Dto.User?> LoginUser(string authId);
+        public Task<User?> GetUserById(int userId);
     }
     public class UserService : EntityService<Dto.User, Dto.UserInput, User>, IUserService
     {
@@ -25,34 +27,41 @@ namespace RPGCalendar.Core.Services
             _sessionService = sessionService;
         }
 
-        public override Task<List<Dto.User>> FetchAllAsync()
+        public override async Task<List<Dto.User>> FetchAllAsync()
         {
-            return base.FetchAllAsync();
+            var users = await Query.Include(u => u.GameUsers)
+                .ToListAsync();
+            return Mapper.Map<List<User>, List<Dto.User>>(users);
         }
 
         public override async Task<Dto.User?> FetchByIdAsync(int id)
         {
             var user = await Query.FirstOrDefaultAsync(x => x.Id == id);
-            _sessionService.SetCurrentUser(user);
             return Mapper.Map<User, Dto.User>(user);
         }
 
-        public override async Task<Dto.User?> InsertAsync(UserInput dto)
+        public override Task<Dto.User?> InsertAsync(UserInput dto)
+            => RegisterUser(dto);
+
+
+        public async Task<Dto.User?> RegisterUser(UserInput userInput)
         {
-            User user = Mapper.Map<UserInput, User>(dto);
+            User user = Mapper.Map<UserInput, User>(userInput);
             DbContext.Add(user);
-            _sessionService.SetCurrentUser(user);
             await DbContext.SaveChangesAsync();
+            _sessionService.SetCurrentUserId(user.Id);
             return Mapper.Map<User, Dto.User>(user);
         }
 
-
-        public async Task<Dto.User> GetUserByAuthId(string authId)
+        public async Task<Dto.User?> LoginUser(string authId)
         {
             var user = await Query.FirstOrDefaultAsync(x => x.AuthId == authId);
+            _sessionService.SetCurrentUserId(user.Id);
             var mappedUser = Mapper.Map<User, Dto.User>(user);
             return mappedUser;
         }
 
+        public async Task<User?> GetUserById(int userId)
+            => await Query.Include(u => u.GameUsers).FirstOrDefaultAsync(x => x.Id == userId);
     }
 }

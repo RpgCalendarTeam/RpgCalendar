@@ -19,14 +19,13 @@ namespace RPGCalendar.Controllers
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserService _userService;
-        private readonly ISession _session;
 
 
-        public LoginController(IHttpContextAccessor httpContextAccessor,
+
+        public LoginController(
             IAuthenticationService authenticationService,
             IUserService userService)
         {
-            _session = httpContextAccessor.HttpContext.Session;
             _authenticationService = authenticationService;
             _userService = userService;
         }
@@ -43,8 +42,7 @@ namespace RPGCalendar.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
 
-            var user = _userService.GetUserByAuthId(result);
-            _session.Set("User", user);
+            var user = await _userService.LoginUser(result);
             return Ok(user);
 
         }

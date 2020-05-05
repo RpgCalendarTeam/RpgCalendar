@@ -5,6 +5,7 @@
     using AutoMapper;
     using Data;
     using Data.GameObjects;
+    using Data.GameCalendar;
 
     public class AutomapperConfigurationProfile : Profile
     {
@@ -28,8 +29,11 @@
             CreateMap<Dto.UserInput, User>();
             CreateMap<User, Dto.User>().ForMember(des => des.AuthId, 
                 opt => opt.Ignore());
-/*            CreateMap<Dto.GameCalendarInput, GameCalendar>();
-            CreateMap<GameCalendar, Dto.GameCalendar>();*/
+
+            CreateMap<Dto.CalendarInput, Calendar>();
+            CreateMap<Calendar, Dto.Calendar>();
+            //CreateMap<Calendar, Dto.Calendar>().ForMember(des => des.Months,
+            //    opt => opt.MapFrom(src => src.Months));
         }
 
         public static IMapper CreateMapper()
