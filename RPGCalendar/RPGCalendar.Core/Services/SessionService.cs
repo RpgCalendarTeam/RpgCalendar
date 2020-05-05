@@ -7,11 +7,11 @@
 
     public interface ISessionService
     {
-        void SetCurrentUser(User user);
-        User GetCurrentUser();
+        void SetCurrentUserId(int userId);
+        int GetCurrentUserId();
         void ClearSessionUser();
-        void SetCurrentGame(Game game);
-        Game GetCurrentGame();
+        void SetCurrentGameId(int gameId);
+        int GetCurrentGameId();
         void ClearSessionGame();
     }
     public class SessionService : ISessionService
@@ -24,20 +24,29 @@
             _session = contextAccessor.HttpContext.Session;
         }
 
-        public void SetCurrentUser(User user)
-            => _session.Set(UserKey, user);
+        public void SetCurrentUserId(int user)
+        {
+            ClearSessionUser();
+            _session.SetInt32(UserKey, user);
+        }
 
-        public User GetCurrentUser()
-            => _session.Get<User>(UserKey) ?? throw new IllegalStateException(nameof(User));
+        public int GetCurrentUserId()
+            => _session.GetInt32(UserKey) ?? throw new IllegalStateException(nameof(User));
 
         public void ClearSessionUser()
-            => _session.Remove(UserKey);
+        {
+            _session.Remove(UserKey);
+            ClearSessionGame();
+        }
 
-        public void SetCurrentGame(Game game)
-            => _session.Set(GameKey, game);
+        public void SetCurrentGameId(int gameId)
+        {
+            ClearSessionGame();
+            _session.SetInt32(GameKey, gameId);
+        }
 
-        public Game GetCurrentGame()
-            => _session.Get<Game>(GameKey) ?? throw new IllegalStateException(nameof(Game));
+        public int GetCurrentGameId()
+            => _session.GetInt32(GameKey) ?? throw new IllegalStateException(nameof(Game));
 
         public void ClearSessionGame()
             => _session.Remove(GameKey);

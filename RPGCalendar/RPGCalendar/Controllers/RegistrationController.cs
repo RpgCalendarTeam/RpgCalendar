@@ -39,7 +39,7 @@ namespace RPGCalendar.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            var user = await _userService.InsertAsync(new UserInput
+            var user = await _userService.RegisterUser(new UserInput
             {
                 Username = model.Username!,
                 Email = model.Email!,

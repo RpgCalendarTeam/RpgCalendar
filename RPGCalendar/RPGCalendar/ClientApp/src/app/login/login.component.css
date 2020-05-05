@@ -25,7 +25,7 @@
 }
 
 .login-header {
-  background: rgb(12, 77, 129);
+  background:black;
   padding: 20px;
   font-size: 1.4em;
   font-weight: normal;
@@ -68,18 +68,18 @@
 }
 
 .login input[type="submit"] {
-  background: rgb(1, 29, 51);
+  background: rgb(19, 18, 18);
   border-color: transparent;
   color: #fff;
   cursor: pointer;
 }
 
 .login input[type="submit"]:hover {
-  background: #17c;
+  background: red;
 }
 
 .login input[type="submit"]:focus {
-  border-color: #05a;
+  border-color: rgb(170, 0, 0);
 }
 
 .has-error input[type="email"],

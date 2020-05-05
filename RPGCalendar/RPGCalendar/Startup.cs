@@ -17,6 +17,7 @@ namespace RPGCalendar
     using Core.Services;
     using Data;
     using Data.GameObjects;
+    using Data.GameCalendar;
     using Identity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -112,12 +113,11 @@ namespace RPGCalendar
                     .AddTransient<INotificationService, NotificationService>()
                     .AddTransient<IGameService, GameService>()
                     .AddTransient<IUserService, UserService>()
-                    .AddTransient<ISessionService, SessionService>();
+                    .AddTransient<ISessionService, SessionService>()
+                    .AddTransient<ICalendarService, CalendarService>();
                     
-            services.AddTransient<IPermissionsService<Note>, PermissionsService<Note>>()
-                    .AddTransient<IPermissionsService<Event>, PermissionsService<Event>>()
-                    .AddTransient<IPermissionsService<Item>, PermissionsService<Item>>()
-                    .AddTransient<IPermissionsService<Notification>, PermissionsService<Notification>>();
+
+            services.AddTransient<ITimeService, TimeService>();
 
             services.AddAutoMapper(new[] { typeof(AutomapperConfigurationProfile).Assembly });
             services.ConfigureApplicationCookie(options =>
