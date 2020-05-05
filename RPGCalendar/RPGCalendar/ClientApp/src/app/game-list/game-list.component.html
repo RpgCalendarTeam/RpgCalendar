@@ -1,98 +1,31 @@
-<h1 style="text-align:center">
-    Welcome to your Game List!
-  </h1>
-  
-
-
-<div class="divs"> 
-    <table class="tbl-top">
-        <thead>
-            <tr>
-                <th class="th-title"><h2>Your Games</h2></th>
-                <th class="th-btn"><button class="btn" onclick="alert('Would forward user to available games\nTo browse and then join a game')">Add Game</button></th>
-            </tr>
-        </thead>
-    </table>
-    
-
-    <table class="tbl">
-        <thead>
-            <tr>
-                <th class="th">Title</th>
-                <th class="th">Game Master</th>
-                <th class="th">Num. of Players</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="td">D&D</td>
-                <td class="td">Dwight</td>
-                <td class="td">4</td>
-            </tr>
-            <tr>
-                <td class="td">GloomHaven</td>
-                <td class="td">Ben</td>
-                <td class="td">3</td>
-            </tr>
-            <tr>
-                <td class="td">Mice & Mystics</td>
-                <td class="td">Jessie</td>
-                <td class="td">4</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="div1">
+    <h1>My Games</h1>
+    <table id="games">
+    <th class="header" *ngFor = "let column of headers">
+      {{column}}
+    </th>
+    <tr onclick="" *ngFor = "let row of rows">
+      <td *ngFor = "let column of headers">
+        {{row[column]}}
+      </td>
+    </tr>
+  </table>
 </div>
-<br><br><br><br><br><br>
-<div class="divs"> 
-    <table class="tbl-top">
-        <thead>
-            <tr>
-                <th class="th-title"><h2>Available Games</h2></th>
-                <th class="th-btn"><button class="btn" onclick="alert('feature not fully implemnted\nGame would be added to table above')">Join Game</button></th>
-            </tr>
-        </thead>
-    </table>
-    
-
-    <table class="tbl">
-        <thead>
-            <tr>
-                <th class="th">Title</th>
-                <th class="th">Game Master</th>
-                <th class="th">Num. of Players</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="td">Possible Game 1</td>
-                <td class="td">4 - 7</td>
-                <td class="td"><label><input type="checkbox" value=""></label></td>
-            </tr>
-            <tr>
-                <td class="td">Possible Game 2</td>
-                <td class="td">4 - 7</td>
-                <td class="td"><label><input type="checkbox" value=""></label></td>
-            </tr>
-            <tr>
-                <td class="td">Possible Game 3</td>
-                <td class="td">4 - 7</td>
-                <td class="td"><label><input type="checkbox" value=""></label></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<br><br><br>
-  <div class="add">
-    <form  class="gamelist-container" (ngSubmit)="createGame()">
-  
-      
-  
-      <p>
-        <input type="submit" value="Create Game">
-        
-      </p>
-      <input type ="button" value="Add Game">
-
-    </form>
+<br>
+<div>
+    <h1>Available Games</h1>
+    <div *ngIf="condition.availGames">
+        <button class="button" onclick="alert('No Games where selected!')">Join Game</button>
+        <table id="games">
+           <th class="header" *ngFor = "let column of aheaders">
+             {{column}}
+           </th>
+           <tr *ngFor = "let row of arows">
+            <td *ngFor = "let column of aheaders">
+              {{row[column]}}
+           </td>
+          </tr>
+         </table>
+      </div>
+      <h2 *ngIf="condition.availGames != true">Sorry there are no available games at this time.</h2>
 </div>

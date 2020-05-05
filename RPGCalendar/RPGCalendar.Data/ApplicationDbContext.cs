@@ -9,6 +9,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using GameObjects;
+    using Joins;
+    using GameCalendar;
 
     public class ApplicationDbContext : DbContext
     {
@@ -19,7 +21,7 @@
         public DbSet<Item> GameItems { get; set; }
         public DbSet<Notification> GameNotifications { get; set; }
         public DbSet<Game> Games { get; set; }
-        //public DbSet<GameCalendar> GameCalendars { get; set; }
+        public DbSet<Calendar> Calendars { get; set; }
         
         private IHttpContextAccessor HttpContextAccessor { get; set; }
 #nullable enable
@@ -31,13 +33,38 @@
             HttpContextAccessor = httpContextAccessor;
         }
 
+        protected void OnCalendarCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Calendar>()
+                .Property(e => e.Months)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            modelBuilder.Entity<Calendar>()
+                .Property(e => e.Days)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GameUser>()
+                .HasKey(t => new { t.GameId, t.UserId });
 
-        //    _ = modelBuilder?.Entity<UserGroup>().HasKey(ug => new { ug.UserId, ug.GroupId });
+            modelBuilder.Entity<GameUser>()
+                .HasOne(pt => pt.Game)
+                .WithMany(p => p.GameUsers)
+                .HasForeignKey(pt => pt.GameId);
 
-        //    modelBuilder?.Entity<UserGroup>().HasOne(ug => ug.User).WithMany(u => u.UserGroups).HasForeignKey(ug => ug.UserId);
-        //    modelBuilder?.Entity<UserGroup>().HasOne(ug => ug.Group).WithMany(u => u.UserGroups).HasForeignKey(ug => ug.GroupId);
+            modelBuilder.Entity<GameUser>()
+                .HasOne(pt => pt.User)
+                .WithMany(t => t.GameUsers)
+                .HasForeignKey(pt => pt.UserId);
+            OnCalendarCreating(modelBuilder);
+            //    _ = modelBuilder?.Entity<UserGroup>().HasKey(ug => new { ug.UserId, ug.GroupId });
+
         }
 
         public override int SaveChanges()

@@ -1,13 +1,28 @@
-<p>Please create your new event!</p>
-<a>
-    <p >
-        <input type="text" placeholder="title" formControlName="title">
+<html>
+<body>
+<h1>Please create your new event!</h1>
+
+<form  class="event-container" (ngSubmit)="createEvent()">
+    <p>
+        <input type="text" placeholder="title" formControlName="title" >
     </p>
-
+    <p>
+        <input type="text" placeholder="description" formControlName="description" >
+    </p>
+    <p>
+        <input type="datetime-local" placeholder="start_time" formControlName="start_time" >
+    </p>
+    <p>
+        <input type="datetime-local" placeholder="end_time" formControlName="end_time" >
+    </p>
     
-    <input type="button" value="create new event" ondblclick="create()" size="4">
+        <input type="checkbox" name="surprise" value="surprise">surprise
+    
+    <p>
+        <input type="submit" value="Create Event">
+      </p>
+    
+</form>
 
-    <label title="result" > </label>
-</a>
-
-
+</body>
+</html>

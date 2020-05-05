@@ -9,8 +9,8 @@
     }
     public class EventService : GameObjectService<Dto.Event, Dto.EventInput, Event>, IEventService
     {
-        public EventService(ApplicationDbContext dbContext, IMapper mapper, IPermissionsService<Event> permissionsService)
-            : base(dbContext, mapper, permissionsService)
+        public EventService(ApplicationDbContext dbContext, IMapper mapper, ISessionService sessionService, IGameService gameService)
+            : base(dbContext, mapper, sessionService, gameService)
         {
         }
     }

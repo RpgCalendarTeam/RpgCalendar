@@ -7,67 +7,78 @@
     using AutoMapper;
     using Data;
     using Data.GameObjects;
-    using Extensions;
-    using Microsoft.AspNetCore.Http;
+    using Exceptions;
     using Microsoft.EntityFrameworkCore;
 
     public interface IGameObjectService<TDto, TInputDto> : IEntityService<TDto, TInputDto>
         where TInputDto : class
         where TDto : class, TInputDto
-    { }
-    public abstract class GameObjectService<TDto, TInputDto, TGameEntity> : EntityService<TDto, TInputDto, TGameEntity>
+    {
+    }
+    public abstract class GameObjectService<TDto, TInputDto, TGameEntity> : EntityService<TDto, TInputDto, TGameEntity>, IGameObjectService<TDto, TInputDto>
         where TGameEntity : GameObject
         where TDto : class, TInputDto
         where TInputDto : class
     {
-        private readonly IPermissionsService<TGameEntity> _permissionService;
-        protected GameObjectService(ApplicationDbContext dbContext, IMapper mapper, IPermissionsService<TGameEntity> permissionService) 
+        private readonly ISessionService _sessionService;
+        private readonly IGameService _gameService;
+
+        protected GameObjectService(ApplicationDbContext dbContext, 
+            IMapper mapper, 
+            ISessionService sessionService, 
+            IGameService gameService) 
             : base(dbContext, mapper)
         {
-            _permissionService = permissionService;
+            _sessionService = sessionService;
+            _gameService = gameService;
         }
 
         public override async Task<TDto?> UpdateAsync(int id, TInputDto entity)
         {
             
-            var obj = await Query.FirstOrDefaultAsync(x => x.Id == id);
-            if (!_permissionService.HasUpdatePermissions(obj))
-                return null;
+            if (!await UserIsInGame())
+                throw new UserPermissionException("Update permission denied");
             return await base.UpdateAsync(id, entity);
         }
 
         public override async Task<List<TDto>> FetchAllAsync()
         {
+            if (!await UserIsInGame())
+                throw new UserPermissionException("Read permission denied");
+            var gameId = _sessionService.GetCurrentGameId();
             var filteredObjects =
-                (await Query.ToListAsync()).Where(HasReadPermissions);
+                (await Query.Where(o => o.GameId == gameId).ToListAsync());
             return Mapper.Map<List<TGameEntity>, List<TDto>>(filteredObjects.ToList());
         }
 
         public override async Task<TDto?> FetchByIdAsync(int id)
         {
-            var obj = await Query.FirstOrDefaultAsync(x => x.Id == id);
-            if (!_permissionService.HasReadPermissions(obj))
-                return default;
+            if (! await UserIsInGame())
+                throw new UserPermissionException("Read permission denied");
+
             return await base.FetchByIdAsync(id);
         }
 
         public override async Task<TDto?> InsertAsync(TInputDto dto)
         {
-            return (_permissionService.HasCreatePermissions())
-                ? await base.InsertAsync(dto)
-                : null;
+            if (!(await UserIsInGame()))
+                throw new UserPermissionException("Update permission denied");
+            TGameEntity entity = Mapper.Map<TInputDto, TGameEntity>(dto);
+            int gameId = _sessionService.GetCurrentGameId();
+            entity.Game = await _gameService.GetGameById(gameId) ?? throw new ArgumentNullException(nameof(gameId));
+            entity.GameId = gameId;
+            DbContext.Add(entity);
+            await DbContext.SaveChangesAsync();
+            return Mapper.Map<TGameEntity, TDto>(entity);
         }
 
-        public override async Task<bool> DeleteAsync(int id)
+        private async Task<bool> UserIsInGame()
         {
-            var obj = await Query.FirstOrDefaultAsync(x => x.Id == id);
-            if (!_permissionService.HasDeletePermissions(obj))
-                return false;
-            return await base.DeleteAsync(id);
+            var userId = _sessionService.GetCurrentUserId();
+            var gameId = _sessionService.GetCurrentGameId();
+            return (await _gameService.GetGameById(gameId)).IsInGame(userId);
         }
 
-        public bool HasReadPermissions(TGameEntity gameEntity)
-            => _permissionService.HasReadPermissions(gameEntity);
 
 
     }

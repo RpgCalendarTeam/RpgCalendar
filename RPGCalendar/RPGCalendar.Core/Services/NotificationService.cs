@@ -11,8 +11,8 @@
 
     public class NotificationService : GameObjectService<Dto.Notification, Dto.NotificationInput, Notification>, INotificationService
     {
-        public NotificationService(ApplicationDbContext dbContext, IMapper mapper, IPermissionsService<Notification> permissionsService)
-            : base(dbContext, mapper, permissionsService)
+        public NotificationService(ApplicationDbContext dbContext, IMapper mapper, ISessionService sessionService, IGameService gameService)
+            : base(dbContext, mapper, sessionService, gameService)
         {
         }
     }
