@@ -1,58 +1,27 @@
-.player{
-    font: large;
-    font-style: italic;
-
-}
-
-.p1 {
-  display: inline-block;
-  position: relative;
-  margin: 1%;
-  width: 20%;
-  height: 230px;
-  background-color: lightgrey;
-  background-image:url("im1.jpg");
-}
-
-.p2 {
-  display: inline-block;
-  position: relative;
-  margin: 1%;
-  width: 20%;
-  height: 230px;
-  background-color: lightgrey;
-  background-image: url("im2.jpg");
-}
-.p3 {
-  display: inline-block;
-  position: relative;
-  margin: 1%;
-  width: 20%;
-  height: 230px;
-  background-color: lightgrey;
-  background-image: url("im3.png");
-}
-.p4 {
-  display: inline-block;
-  position: relative;
-  margin: 1%;
-  width: 20%;
-  height: 230px;
-  background-color: lightgrey;
-  background-image: url("im4.png");
-}
-.button {
-  display: inline-block;
-  padding: 10px 18px;
-  font-size: 12px;
-  cursor: pointer;
+.h1{
   text-align: center;
-  text-decoration: none;
-  outline: none;
-  color: whitesmoke;
-  background-color: lightslategrey;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 3px #999;
+  color: purple;
 }
 
+#players{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#players td, #users th{
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#players tr:nth-child(even){background-color: darkslategray;}
+
+#players tr:hover{background-color: crimson;}
+
+#players th{
+  border: 1px solid #ddd;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: darkgray;
+  color: white;
+}

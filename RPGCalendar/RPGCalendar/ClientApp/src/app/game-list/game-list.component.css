@@ -1,45 +1,37 @@
-.tbl{
+#games{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: white;
     width: 1000px;
-    border: black;
-    border-style: groove;
+    border-style: double;
 }
 
-.th{
-    border: black;
-    border-style: groove;
-    background-color: teal;
-    text-indent: 5px;
+#games td, #games th{
+    border: 1px solid #ddd;
+    padding: 8px;
 }
 
-.td{
-    height: 50px;
-    vertical-align: bottom;
-    border: black;
-    border-style: groove;
-    text-align: left;
-    text-indent: 5px;
-    
+#games tr:hover{
+    background-color: magenta;
 }
 
-.th,.td {
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+#games th{
+border: 1px solid #ddd;   
+padding-top: 12px;
+padding-bottom: 12px;
+text-align: left;
+background-color: darkmagenta;
+color: white;
 }
 
-.tbl-top{
-    width: 1000px;
-}
-
-.th-btn{
+.button{
     float: right;
+    background-color: slategrey;
+    color: white;
+}
+.button:hover{
+    background-color: darkslategray;
 }
 
-.th-title, .th-btn{
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+.div1{
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
- 
- .btn-create{
-     width: 1000px;
-     color: white;
-     background-color: slateblue;
-
- }
