@@ -11,10 +11,12 @@
     using GameObjects;
     using Joins;
     using GameCalendar;
+    using Microsoft.Extensions.Configuration;
 
     public class ApplicationDbContext : DbContext
     {
 #nullable disable
+        public IConfiguration Configuration { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Note> GameNotes { get; set; }
         public DbSet<Event> GameEvents { get; set; }
@@ -26,11 +28,21 @@
         private IHttpContextAccessor HttpContextAccessor { get; set; }
 #nullable enable
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContext) : base(dbContext) { }
+        public ApplicationDbContext(IConfiguration configuration) 
+            : base()
+        {
+            Configuration = configuration;
+        }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContext, IHttpContextAccessor httpContextAccessor) : base(dbContext)
+        public ApplicationDbContext(IConfiguration configuration, IHttpContextAccessor httpContextAccessor) 
+            : this(configuration)
         {
             HttpContextAccessor = httpContextAccessor;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         protected void OnCalendarCreating(ModelBuilder modelBuilder)
@@ -38,13 +50,13 @@
             modelBuilder.Entity<Calendar>()
                 .Property(e => e.Months)
                 .HasConversion(
-                    v => string.Join(',', v),
+                    v => string.Join(',', v!),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             modelBuilder.Entity<Calendar>()
                 .Property(e => e.Days)
                 .HasConversion(
-                    v => string.Join(',', v),
+                    v => string.Join(',', v!),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
         }
 

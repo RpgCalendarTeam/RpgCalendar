@@ -20,10 +20,12 @@ namespace RPGCalendar.Data.Joins
             Game = game;
         }
 
+#nullable disable
         public GameUser()
         {
 
         }
+#nullable enable
     }
     
 }
