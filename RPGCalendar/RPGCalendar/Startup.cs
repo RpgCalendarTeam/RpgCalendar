@@ -60,24 +60,17 @@ namespace RPGCalendar
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
             if (Env.IsProduction())
             {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.EnableSensitiveDataLogging()
-                        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-                services.AddDbContext<AuthenticationDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AuthConnection")));
+                services.AddDbContext<ApplicationDbContext>();
+                services.AddDbContext<AuthenticationDbContext>();
             }
             else
             {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.EnableSensitiveDataLogging()
-                        .UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-                services.AddDbContext<AuthenticationDbContext>(options =>
-                    options.UseSqlite(Configuration.GetConnectionString("AuthConnection")));
-
+                services.AddDbContext<ApplicationDbContext, SqliteDbContext>();
+                services.AddDbContext<AuthenticationDbContext, SqliteAuthenticationDbContext>();
             }
+
 
             services
                 .AddDefaultIdentity<ApplicationUser>()
@@ -105,6 +98,7 @@ namespace RPGCalendar
                 options.User.RequireUniqueEmail = false;
             });
 
+
             services.Configure<RpgCalendarSettings>(Configuration.GetSection(nameof(RpgCalendarSettings)));
             services.AddTransient<INoteService, NoteService>()
                     .AddTransient<IAuthenticationService, AuthenticationService>()
@@ -119,6 +113,7 @@ namespace RPGCalendar
 
             services.AddTransient<ITimeService, TimeService>();
 
+            
             services.AddAutoMapper(new[] { typeof(AutomapperConfigurationProfile).Assembly });
             services.ConfigureApplicationCookie(options =>
             {
@@ -209,5 +204,6 @@ namespace RPGCalendar
             Configuration.GetSection(nameof(RpgCalendarSettings)).Bind(appSettings);
             return appSettings;
         }
+
     }
 }

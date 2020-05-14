@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RPGCalendar.Data.Migrations
+namespace RPGCalendar.Data.Migrations.SqliteMigrations
 {
     public partial class InitialCreate : Migration
     {
