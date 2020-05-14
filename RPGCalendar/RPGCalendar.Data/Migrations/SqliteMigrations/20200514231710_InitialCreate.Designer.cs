@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RPGCalendar.Data;
 
-namespace RPGCalendar.Data.Migrations
+namespace RPGCalendar.Data.Migrations.SqliteMigrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200514162111_InitialCreate")]
+    [DbContext(typeof(SqliteDbContext))]
+    [Migration("20200514231710_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

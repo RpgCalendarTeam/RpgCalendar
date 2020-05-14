@@ -52,9 +52,9 @@
             Game entity = Mapper.Map<Dto.GameInput, Game>(dto);
             int userId = _sessionService.GetCurrentUserId();
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
-            entity.GameMaster = userId;
+            entity.GameMaster = user.Id;
             entity.GameUsers.Add(new GameUser(user.Id, user, entity.Id, entity));
-            await _calendarService.InsertAsync(dto.GameTime);
+            await _calendarService.InsertAsync(dto.GameTime!);
             DbContext.Add(entity);
             await DbContext.SaveChangesAsync();
             _sessionService.SetCurrentGameId(entity.Id);
