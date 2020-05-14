@@ -71,7 +71,6 @@ namespace RPGCalendar
                 services.AddDbContext<AuthenticationDbContext, SqliteAuthenticationDbContext>();
             }
 
-
             services
                 .AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<AuthenticationDbContext>();
