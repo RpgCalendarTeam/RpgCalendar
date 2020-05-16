@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using RPGCalendar.Data;
 
 namespace RPGCalendar.Core.Services
 {
+    using Repositories;
+
     public interface IEntityService<TDto, TInputDto>
         where TInputDto : class
         where TDto : class, TInputDto
@@ -16,66 +15,55 @@ namespace RPGCalendar.Core.Services
         Task<List<TDto>> FetchAllAsync();
         Task<TDto?> FetchByIdAsync(int id);
         Task<TDto?> InsertAsync(TInputDto entity);
-        Task<TDto?> UpdateAsync(int id, TInputDto entity);
+        Task<TDto?> UpdateAsync(int id, TInputDto input);
         Task<bool> DeleteAsync(int id);
     }
 
-    public abstract class EntityService<TDto, TInputDto, TEntity> : IEntityService<TDto, TInputDto>
+    public abstract class EntityService<TDto, TInputDto, TEntity, TEntityRepository> : IEntityService<TDto, TInputDto>
+        where TEntityRepository : IEntityRepository<TEntity>
         where TEntity : EntityBase
         where TDto : class, TInputDto
         where TInputDto : class
     {
-        protected ApplicationDbContext DbContext { get; }
-
+        protected TEntityRepository EntityRepository { get; }
         protected IMapper Mapper { get; }
 
-        protected virtual IQueryable<TEntity> Query => DbContext.Set<TEntity>();
-
-        public EntityService(ApplicationDbContext dbContext, IMapper mapper)
+        public EntityService(IMapper mapper, TEntityRepository entityRepository)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            EntityRepository = entityRepository ?? throw new ArgumentNullException(nameof(entityRepository));
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public virtual async Task<bool> DeleteAsync(int id)
-        {
-            TEntity entity = await Query.FirstOrDefaultAsync(x => x.Id == id);
-            if (entity is { })
-            {
-                DbContext.Remove(entity);
-                await DbContext.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+        public virtual Task<bool> DeleteAsync(int id)
+            => EntityRepository.DeleteAsync(id);
 
         public virtual async Task<List<TDto>> FetchAllAsync()
         {
-            return Mapper.Map<List<TEntity>, List<TDto>>(await Query.ToListAsync());
+            return Mapper.Map<List<TEntity>, List<TDto>>(await EntityRepository.FetchAllAsync());
         }
 
         public virtual async Task<TDto?> FetchByIdAsync(int id)
         {
-            return Mapper.Map<TEntity, TDto>(await Query.FirstOrDefaultAsync(x => x.Id == id));
+            TEntity? entity = await EntityRepository.FetchByIdAsync(id);
+            return entity is null 
+                ? null 
+                : Mapper.Map<TEntity, TDto>(entity);
         }
 
         public virtual async Task<TDto?> InsertAsync(TInputDto dto)
         {
             TEntity entity = Mapper.Map<TInputDto, TEntity>(dto);
-            DbContext.Add(entity);
-            await DbContext.SaveChangesAsync();
+            await EntityRepository.InsertAsync(entity);
             return Mapper.Map<TEntity, TDto>(entity);
         }
 
-        public virtual async Task<TDto?> UpdateAsync(int id, TInputDto entity)
+        public virtual async Task<TDto?> UpdateAsync(int id, TInputDto input)
         {
-            if (await Query.FirstOrDefaultAsync(x => x.Id == id) is TEntity result)
-            {
-                Mapper.Map(entity, result);
-                await DbContext.SaveChangesAsync();
-                return Mapper.Map<TEntity, TDto>(result);
-            }
-            return null;
+            TEntity entity = Mapper.Map<TInputDto, TEntity>(input);
+            TEntity? result = await EntityRepository.UpdateAsync(id, entity);
+            return entity is null
+                ? null
+                : Mapper.Map<TEntity, TDto>(entity);
         }
     }
 }

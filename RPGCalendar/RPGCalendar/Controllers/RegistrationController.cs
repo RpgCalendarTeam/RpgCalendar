@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RPGCalendar.Controllers
 {
-    using System.Security.Claims;
     using Core.Dto;
-    using Core.Extensions;
     using Core.Services;
     using Identity;
     using Microsoft.AspNetCore.Authorization;
@@ -19,14 +14,14 @@ namespace RPGCalendar.Controllers
     public class RegistrationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly IUserService _userService;
+        private readonly IUserService _userRepository;
 
 
         public RegistrationController(IAuthenticationService authenticationService,
-                                      IUserService userService)
+                                      IUserService userRepository)
         {
             _authenticationService = authenticationService;
-            _userService = userService;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -39,7 +34,7 @@ namespace RPGCalendar.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            var user = await _userService.RegisterUser(new UserInput
+            var user = await _userRepository.RegisterUser(new UserInput
             {
                 Username = model.Username!,
                 Email = model.Email!,

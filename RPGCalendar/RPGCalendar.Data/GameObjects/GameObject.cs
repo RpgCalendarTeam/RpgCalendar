@@ -1,7 +1,5 @@
 ﻿namespace RPGCalendar.Data.GameObjects
 {
-    using System.Collections.Generic;
-
     public abstract class GameObject : FingerPrintEntityBase
     {
 #nullable disable

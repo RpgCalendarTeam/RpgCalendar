@@ -8,19 +8,16 @@ namespace RPGCalendar
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.SpaServices.AngularCli;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Core;
     using Core.Models;
+    using Core.Repositories;
     using Core.Services;
     using Data;
-    using Data.GameObjects;
-    using Data.GameCalendar;
     using Identity;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Authorization;
 
     public class Startup
@@ -99,20 +96,28 @@ namespace RPGCalendar
 
 
             services.Configure<RpgCalendarSettings>(Configuration.GetSection(nameof(RpgCalendarSettings)));
-            services.AddTransient<INoteService, NoteService>()
-                    .AddTransient<IAuthenticationService, AuthenticationService>()
-                    .AddTransient<IEventService, EventService>()
-                    .AddTransient<IItemService, ItemService>()
-                    .AddTransient<INotificationService, NotificationService>()
-                    .AddTransient<IGameService, GameService>()
-                    .AddTransient<IUserService, UserService>()
-                    .AddTransient<ISessionService, SessionService>()
-                    .AddTransient<ICalendarService, CalendarService>();
-                    
 
-            services.AddTransient<ITimeService, TimeService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
-            
+            services.AddTransient<ICalendarRepository, CalendarRepository>()
+                .AddTransient<IEventRepository, EventRepository>()
+                .AddTransient<IGameRepository, GameRepository>()
+                .AddTransient<IItemRepository, ItemRepository>()
+                .AddTransient<INoteRepository, NoteRepository>()
+                .AddTransient<INotificationRepository, NotificationRepository>()
+                .AddTransient<IUserRepository, UserRepository>();
+
+            services.AddTransient<ICalendarService, CalendarService>()
+                .AddTransient<IEventService, EventService>()
+                .AddTransient<IGameService, GameService>()
+                .AddTransient<IItemService, ItemService>()
+                .AddTransient<INoteService, NoteService>()
+                .AddTransient<INotificationService, NotificationService>()
+                .AddTransient<ISessionService, SessionService>()
+                .AddTransient<ITimeService, TimeService>()
+                .AddTransient<IUserService, UserService>();
+
+
             services.AddAutoMapper(new[] { typeof(AutomapperConfigurationProfile).Assembly });
             services.ConfigureApplicationCookie(options =>
             {

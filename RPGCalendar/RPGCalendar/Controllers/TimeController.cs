@@ -1,7 +1,6 @@
 ﻿namespace RPGCalendar.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -12,12 +11,12 @@
     [ApiController]
     public class TimeController : ControllerBase
     {
-        protected ITimeService timeService { get; }
-        protected ICalendarService calendarService { get; }
+        protected ITimeService TimeService { get; }
+        protected ICalendarService CalendarRepository { get; }
         public TimeController(ITimeService time, ICalendarService calendar)
         {
-            timeService = time ?? throw new ArgumentNullException(nameof(timeService));
-            calendarService = calendar ?? throw new ArgumentNullException(nameof(calendarService));
+            TimeService = time ?? throw new ArgumentNullException(nameof(TimeService));
+            CalendarRepository = calendar ?? throw new ArgumentNullException(nameof(CalendarRepository));
         }
 
         [HttpPut("{id,sec}")]
@@ -25,7 +24,7 @@
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Calendar>> Put(int id, long sec)
         {
-            var result = await timeService.ProceedTime(id,sec);
+            var result = await TimeService.ProceedTime(id,sec);
             if (result is null)
                 return NotFound();
             return Ok(result);

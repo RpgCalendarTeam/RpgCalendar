@@ -8,93 +8,96 @@
     using Data.Exceptions;
     using Data.Joins;
     using Exceptions;
-    using Microsoft.EntityFrameworkCore;
+    using Repositories;
 
-    public interface IGameService : IEntityService<Dto.Game, Dto.GameInput>
+    public interface IGameService
     {
-        Task<Dto.Game?> AddNewGame(int gameId);
-        Task<Game> GetGameById(int gameId);
+        Task<Dto.Game?> AddNew(int gameId);
+        Task<Dto.Game?> CreateAsync(Dto.GameInput dto);
+        Task<List<Dto.Game>> GetForUserAsync();
+        Task<Dto.Game?> GetByIdForUserAsync(int id);
+        Task<Dto.Game?> UpdateAsync(int id, Dto.GameInput entity);
+        Task<bool> DeleteAsync(int id);
+        Task<Game?> GetById(int gameId);
+
     }
-    public class GameService : EntityService<Dto.Game, Dto.GameInput, Game>, IGameService
+    public class GameService : IGameService
     {
         private readonly ISessionService _sessionService;
+        private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ICalendarService _calendarService;
+        private readonly IGameRepository _gameRepository;
 
-        public GameService(ISessionService sessionService, ApplicationDbContext dbContext, IMapper mapper, IUserService userService, ICalendarService calendarService)
-            : base(dbContext, mapper)
+        public GameService(ISessionService sessionService, IMapper mapper, IUserService userService, ICalendarService calendarService, IGameRepository gameRepository)
         {
             _sessionService = sessionService;
+            _mapper = mapper;
             _userService = userService;
             _calendarService = calendarService;
+            _gameRepository = gameRepository;
         }
 
-        public override async Task<List<Dto.Game>> FetchAllAsync()
+        public async Task<List<Dto.Game>> GetForUserAsync()
         {
             var userId = _sessionService.GetCurrentUserId();
-            var gamesQuery = Query.Include(g => g.GameUsers).Include(g => g.GameTime);
-
-            var games = gamesQuery.Where(e => e.GameUsers.Any(g => g.UserId == userId));
-            return Mapper.Map<List<Game>, List<Dto.Game>>(await games.ToListAsync());
+            var games = (await _gameRepository.FetchAllAsync()).Where(e => e.IsInGame(userId));
+            return _mapper.Map<List<Game>, List<Dto.Game>>(games.ToList());
         }
-        public override async Task<Dto.Game?> FetchByIdAsync(int id)
+        public async Task<Dto.Game?> GetByIdForUserAsync(int id)
         {
             var userId = _sessionService.GetCurrentUserId();
-            var game = await GetGameById(id);
+            var game = await GetById(id);
+            if (game is null)
+                return null;
             if(!game.IsInGame(userId))
                 throw new UserPermissionException("Read Permission Denied");
             _sessionService.SetCurrentGameId(game.Id);
-            return Mapper.Map<Game, Dto.Game>(game);
+            return _mapper.Map<Game, Dto.Game>(game);
         }
 
-        public override async Task<Dto.Game?> InsertAsync(Dto.GameInput dto)
+        public async Task<Dto.Game?> CreateAsync(Dto.GameInput dto)
         {
-            Game entity = Mapper.Map<Dto.GameInput, Game>(dto);
+            Game entity = _mapper.Map<Dto.GameInput, Game>(dto);
             int userId = _sessionService.GetCurrentUserId();
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
             entity.GameMaster = user.Id;
             entity.GameUsers.Add(new GameUser(user.Id, user, entity.Id, entity));
             await _calendarService.InsertAsync(dto.GameTime!);
-            DbContext.Add(entity);
-            await DbContext.SaveChangesAsync();
+            await _gameRepository.InsertAsync(entity);
             _sessionService.SetCurrentGameId(entity.Id);
-            return Mapper.Map<Game, Dto.Game>(entity);
+            return _mapper.Map<Game, Dto.Game>(entity);
         }
 
-        public override Task<Dto.Game?> UpdateAsync(int id, Dto.GameInput entity)
+        public async Task<Dto.Game?> UpdateAsync(int id, Dto.GameInput input)
         {
-            return base.UpdateAsync(id, entity);
+            Game entity = _mapper.Map<Dto.GameInput, Game>(input);
+            Game? result = await _gameRepository.UpdateAsync(id, entity);
+            return result is null 
+            ? null
+            :_mapper.Map<Game, Dto.Game>(result);
         }
 
-        public override Task<bool> DeleteAsync(int id)
-        {
-            return base.DeleteAsync(id);
-        }
+        public Task<bool> DeleteAsync(int id)
+            => _gameRepository.DeleteAsync(id);
 
-        public async Task<Dto.Game?> AddNewGame(int gameId)
+        public async Task<Dto.Game?> AddNew(int gameId)
         {
-            var game = await GetGameById(gameId);
             var userId = _sessionService.GetCurrentUserId();
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
-            if (!game.IsInGame(userId))
-            {
-                game.GameUsers.Add(new GameUser(user.Id, user, game.Id, game));
-                await DbContext.SaveChangesAsync();
-            }
+
+            var game = await _gameRepository.AddNewGame(gameId, user);
+
+            if (game is null)
+                return null;
 
             _sessionService.SetCurrentGameId(game.Id);
-            return Mapper.Map<Game, Dto.Game>(game);
+            return _mapper.Map<Game, Dto.Game>(game);
         }
 
-        
 
-        public async Task<Game> GetGameById(int gameId)
-            => await Query.Include(g => g.GameUsers)
-                .Include(g => g.Items)
-                .Include(g => g.Events)
-                .Include(g => g.Notes)
-                .Include(g => g.Notifications)
-                .Include(g => g.GameTime)
-                .FirstOrDefaultAsync(x => x.Id == gameId);
+
+        public Task<Game?> GetById(int gameId)
+            => _gameRepository.FetchByIdAsync(gameId);
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace RPGCalendar.Core.Extensions
 {
     using System;
-    using System.Runtime.CompilerServices;
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
 

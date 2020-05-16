@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RPGCalendar.Data.Joins
+﻿namespace RPGCalendar.Data.Joins
 {
     public class GameUser : FingerPrintEntityBase
     {

@@ -1,6 +1,5 @@
 ﻿namespace RPGCalendar.Core
 {
-    using System.Collections.Generic;
     using System.Reflection;
     using AutoMapper;
     using Data;
@@ -27,8 +26,7 @@
             CreateMap<Game, Dto.Game>();
 
             CreateMap<Dto.UserInput, User>();
-            CreateMap<User, Dto.User>().ForMember(des => des.AuthId, 
-                opt => opt.Ignore());
+            CreateMap<User, Dto.User>();
 
             CreateMap<Dto.CalendarInput, Calendar>();
             CreateMap<Calendar, Dto.Calendar>();
