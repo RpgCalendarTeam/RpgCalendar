@@ -2,7 +2,6 @@
 {
     using Data;
     using Data.Exceptions;
-    using Extensions;
     using Microsoft.AspNetCore.Http;
 
     public interface ISessionService

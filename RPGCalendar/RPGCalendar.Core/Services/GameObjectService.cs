@@ -5,17 +5,18 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data;
     using Data.GameObjects;
     using Exceptions;
-    using Microsoft.EntityFrameworkCore;
+    using Repositories;
 
     public interface IGameObjectService<TDto, TInputDto> : IEntityService<TDto, TInputDto>
         where TInputDto : class
         where TDto : class, TInputDto
     {
     }
-    public abstract class GameObjectService<TDto, TInputDto, TGameEntity> : EntityService<TDto, TInputDto, TGameEntity>, IGameObjectService<TDto, TInputDto>
+    public abstract class GameObjectService<TDto, TInputDto, TGameEntity, TEntityRepository> 
+        : EntityService<TDto, TInputDto, TGameEntity, TEntityRepository>, IGameObjectService<TDto, TInputDto>
+        where TEntityRepository : IEntityRepository<TGameEntity>
         where TGameEntity : GameObject
         where TDto : class, TInputDto
         where TInputDto : class
@@ -23,11 +24,11 @@
         private readonly ISessionService _sessionService;
         private readonly IGameService _gameService;
 
-        protected GameObjectService(ApplicationDbContext dbContext, 
-            IMapper mapper, 
+        protected GameObjectService(IMapper mapper, 
             ISessionService sessionService, 
-            IGameService gameService) 
-            : base(dbContext, mapper)
+            IGameService gameService,
+            TEntityRepository entityRepository)
+            : base(mapper, entityRepository)
         {
             _sessionService = sessionService;
             _gameService = gameService;
@@ -46,8 +47,8 @@
             if (!await UserIsInGame())
                 throw new UserPermissionException("Read permission denied");
             var gameId = _sessionService.GetCurrentGameId();
-            var filteredObjects =
-                (await Query.Where(o => o.GameId == gameId).ToListAsync());
+            var filteredObjects = (await EntityRepository.FetchAllAsync())
+                                                    .Where(obj => obj.GameId == gameId);
             return Mapper.Map<List<TGameEntity>, List<TDto>>(filteredObjects.ToList());
         }
 
@@ -65,10 +66,9 @@
                 throw new UserPermissionException("Update permission denied");
             TGameEntity entity = Mapper.Map<TInputDto, TGameEntity>(dto);
             int gameId = _sessionService.GetCurrentGameId();
-            entity.Game = await _gameService.GetGameById(gameId) ?? throw new ArgumentNullException(nameof(gameId));
+            entity.Game = await _gameService.GetById(gameId) ?? throw new ArgumentNullException(nameof(gameId));
             entity.GameId = gameId;
-            DbContext.Add(entity);
-            await DbContext.SaveChangesAsync();
+            await EntityRepository.InsertAsync(entity);
             return Mapper.Map<TGameEntity, TDto>(entity);
         }
 
@@ -76,7 +76,8 @@
         {
             var userId = _sessionService.GetCurrentUserId();
             var gameId = _sessionService.GetCurrentGameId();
-            return (await _gameService.GetGameById(gameId)).IsInGame(userId);
+            var game = await _gameService.GetById(gameId);
+            return game?.IsInGame(userId) ?? false;
         }
 
 

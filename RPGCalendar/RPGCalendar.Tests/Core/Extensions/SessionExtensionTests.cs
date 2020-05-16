@@ -1,7 +1,6 @@
 ﻿namespace RPGCalendar.Tests.Core.Extensions
 {
     using System;
-    using System.Threading;
     using FluentAssertions;
     using Microsoft.AspNetCore.Http;
     using Moq;

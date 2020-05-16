@@ -1,6 +1,5 @@
 ﻿namespace RPGCalendar.Identity
 {
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
 

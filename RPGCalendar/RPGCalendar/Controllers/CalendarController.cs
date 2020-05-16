@@ -5,7 +5,7 @@
 
     public class CalendarController : BaseApiController<Calendar, CalendarInput>
     {
-        public CalendarController(ICalendarService service, ITimeService timeService) :
+        public CalendarController(ICalendarService service) :
             base(service)
         { }
     }

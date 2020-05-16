@@ -1,9 +1,8 @@
 ﻿namespace RPGCalendar.Core.Dto
 {
     using System;
-    using System.Collections.Generic;
 
-    public class UserInput
+    public abstract class UserInfo
     {
         private string _username = string.Empty;
         public string Username
@@ -19,13 +18,17 @@
             get => _email;
             set => _email = value ?? throw new ArgumentNullException(nameof(Email));
         }
-
-        public string? AuthId { get; set; }
-
     }
 
-    public class User : UserInput, IEntity
+    public class UserInput : UserInfo
+    {
+        
+        public string? AuthId { get; set; }
+    }
+
+    public class User : UserInfo, IEntity
     {
         public int Id { get; set; }
+
     }
 }

@@ -1,16 +1,16 @@
 ﻿namespace RPGCalendar.Core.Services
 {
     using AutoMapper;
-    using Data;
     using Data.GameObjects;
+    using Repositories;
 
     public interface IEventService : IGameObjectService<Dto.Event, Dto.EventInput>
     {
     }
-    public class EventService : GameObjectService<Dto.Event, Dto.EventInput, Event>, IEventService
+    public class EventService : GameObjectService<Dto.Event, Dto.EventInput, Event, IEventRepository>, IEventService
     {
-        public EventService(ApplicationDbContext dbContext, IMapper mapper, ISessionService sessionService, IGameService gameService)
-            : base(dbContext, mapper, sessionService, gameService)
+        public EventService(IMapper mapper, ISessionService sessionService, IGameService gameService, IEventRepository eventRepository)
+            : base(mapper, sessionService, gameService, eventRepository)
         {
         }
     }

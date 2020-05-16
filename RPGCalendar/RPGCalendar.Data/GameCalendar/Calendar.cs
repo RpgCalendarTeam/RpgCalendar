@@ -1,9 +1,5 @@
 ﻿namespace RPGCalendar.Data.GameCalendar
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
-
     public class Calendar : FingerPrintEntityBase
     {
         public const int DayInSec = 86400; //constant one day in seconds

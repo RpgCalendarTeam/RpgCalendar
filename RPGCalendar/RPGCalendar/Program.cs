@@ -18,14 +18,14 @@ namespace RPGCalendar
             {
                 IServiceProvider services = scope.ServiceProvider;
                 using var context = services.GetRequiredService<ApplicationDbContext>();
-                context.Database.Migrate();
+                context.Database.EnsureCreated();
             }
 
             using (IServiceScope scope = host.Services.CreateScope())
             {
                 IServiceProvider services = scope.ServiceProvider;
                 using var context = services.GetRequiredService<AuthenticationDbContext>();
-                context.Database.Migrate();
+                context.Database.EnsureCreated();
             }
 
             host.Run();

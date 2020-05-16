@@ -5,9 +5,9 @@ namespace RPGCalendar.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Exceptions;
+    using Core.Services;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Core.Services;
 
 
     [Route("api/[controller]")]
@@ -20,7 +20,7 @@ namespace RPGCalendar.Controllers
 
         protected BaseApiController(IEntityService<TDto, TInputDto> service)
         {
-            Service = service ?? throw new ArgumentNullException(nameof(service));
+            this.Service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         [HttpGet]
