@@ -1,5 +1,7 @@
 ﻿namespace RPGCalendar.Core.Services
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Dto;
@@ -11,6 +13,7 @@
         public Task<Dto.User?> RegisterUser(UserInput userInput);
         public Task<Dto.User?> LoginUser(string authId);
         public Task<User?> GetUserById(int userId);
+        public Task<List<Dto.User>> GetPlayersList();
     }
     public class UserService : IUserService
     {
@@ -44,5 +47,14 @@
 
         public async Task<User?> GetUserById(int userId)
             => await _userRepository.GetUserById(userId);
+
+        public async Task<List<Dto.User>> GetPlayersList()
+        {
+            var gameId = _sessionService.GetCurrentGameId();
+            var players = (await _userRepository.FetchAllAsync())
+                      .Where(a => a.GameUsers.Any(e => e.GameId == gameId));
+            return _mapper.Map<List<User>, List<Dto.User>>(players.ToList());
+            //return players.ToList();
+        }
     }
 }
