@@ -1,17 +1,17 @@
 ﻿namespace RPGCalendar.Core.Services
 {
     using AutoMapper;
-    using Data;
     using Data.GameObjects;
+    using Repositories;
 
     public interface IItemService : IGameObjectService<Dto.Item, Dto.ItemInput>
     {
     }
 
-    public class ItemService : GameObjectService<Dto.Item, Dto.ItemInput, Item>, IItemService
+    public class ItemService : GameObjectService<Dto.Item, Dto.ItemInput, Item, IItemRepository>, IItemService
     {
-        public ItemService(ApplicationDbContext dbContext, IMapper mapper, ISessionService sessionService, IGameService gameService)
-            : base(dbContext, mapper, sessionService, gameService)
+        public ItemService(IMapper mapper, ISessionService sessionService, IGameService gameService, IItemRepository itemRepository)
+            : base(mapper, sessionService, gameService, itemRepository)
         {
         }
     }

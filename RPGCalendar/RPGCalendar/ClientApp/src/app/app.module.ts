@@ -22,6 +22,8 @@ import { GameListComponent } from './game-list/game-list.component';
 import { ForgotPasswordComponent} from './forgot-password/forgot-password.component';
 import {ResponseResetComponent} from  './response-reset/response-reset.component';
 import {EventsComponent} from './events/events.component';
+import { HelpCompComponent } from './help-comp/help-comp.component';
+import { GameCreateComponent } from './game-create/game-create.component';
 
 
 @NgModule({
@@ -35,6 +37,7 @@ import {EventsComponent} from './events/events.component';
     AdminComponent,
     RegisterComponent,
     ComponentHelpComponent,
+    HelpCompComponent,
     FetchDataComponent,
     GameCalendarComponent,
     GameOverviewComponent,
@@ -42,7 +45,8 @@ import {EventsComponent} from './events/events.component';
     GameListComponent,
     ForgotPasswordComponent,
     EventsComponent,
-    ResponseResetComponent
+    ResponseResetComponent,
+    GameCreateComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -59,11 +63,12 @@ import {EventsComponent} from './events/events.component';
       { path: 'login', component: LoginComponent },
       { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
       { path: 'register', component: RegisterComponent },
-      { path: 'help', component: ComponentHelpComponent },
+      { path: 'help', component: HelpCompComponent },
       { path: "gamelist", component: GameListComponent },
       { path: "forgot-password", component: ForgotPasswordComponent },
       {path: "event", component: EventsComponent},
-      { path: "password-reset", component: ResponseResetComponent }
+      { path: "password-reset", component: ResponseResetComponent },
+      { path: "game-create", component: GameCreateComponent }
     ])
   ],
   providers: [],

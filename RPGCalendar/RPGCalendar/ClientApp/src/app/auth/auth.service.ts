@@ -11,12 +11,12 @@ import { stringify } from 'querystring';
   providedIn: 'root'
 })
 export class AuthService {
-  AUTH_SERVER = "http://localhost:3000";
+  AUTH_SERVER = "/api";
   authSubject  =  new  BehaviorSubject(false);
   constructor(private httpClient: HttpClient) { }
 
   register(user: User): Observable<JwtResponse> {
-    return this.httpClient.post<JwtResponse>(`${this.AUTH_SERVER}/register`, user).pipe(
+    return this.httpClient.post<JwtResponse>(`${this.AUTH_SERVER}/Registration`, user).pipe(
       tap((res:  JwtResponse ) => {
 
         if (res.user) {
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   signIn(user: User): Observable<JwtResponse> {
-    return this.httpClient.post(`${this.AUTH_SERVER}/login`, user).pipe(
+    return this.httpClient.post(`${this.AUTH_SERVER}/Login`, user).pipe(
       tap(async (res: JwtResponse) => {
 
         if (res.user) {

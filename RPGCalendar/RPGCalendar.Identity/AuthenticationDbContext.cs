@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Options;
 
     public class AuthenticationDbContext : IdentityDbContext<ApplicationUser>
     { 

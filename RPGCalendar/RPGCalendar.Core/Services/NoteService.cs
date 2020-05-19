@@ -2,16 +2,16 @@
 {
     using AutoMapper;
     using Data.GameObjects;
-    using RPGCalendar.Data;
+    using Repositories;
 
     public interface INoteService : IGameObjectService<Dto.Note, Dto.NoteInput>
     {
     }
 
-    public class NoteService : GameObjectService<Dto.Note, Dto.NoteInput, Note>, INoteService
+    public class NoteService : GameObjectService<Dto.Note, Dto.NoteInput, Note, INoteRepository>, INoteService
     {
-        public NoteService(ApplicationDbContext dbContext, IMapper mapper,  ISessionService sessionService, IGameService gameService) 
-            : base(dbContext, mapper, sessionService, gameService)
+        public NoteService(IMapper mapper,  ISessionService sessionService, IGameService gameService, INoteRepository noteRepository) 
+            : base(mapper, sessionService, gameService, noteRepository)
         {
         }
     }
