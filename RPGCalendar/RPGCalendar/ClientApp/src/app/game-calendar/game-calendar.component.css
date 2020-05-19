@@ -29,3 +29,12 @@
     height: 2.5em;
 
 }
+
+.button{
+    float: right;
+    background-color: slategray;
+    color: white;
+}
+.button:hover{
+    background-color: darkslategray;
+}
