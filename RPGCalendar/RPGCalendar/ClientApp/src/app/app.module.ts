@@ -23,6 +23,7 @@ import { ForgotPasswordComponent} from './forgot-password/forgot-password.compon
 import {ResponseResetComponent} from  './response-reset/response-reset.component';
 import {EventsComponent} from './events/events.component';
 import { HelpCompComponent } from './help-comp/help-comp.component';
+import { GameCreateComponent } from './game-create/game-create.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { HelpCompComponent } from './help-comp/help-comp.component';
     GameListComponent,
     ForgotPasswordComponent,
     EventsComponent,
-    ResponseResetComponent
+    ResponseResetComponent,
+    GameCreateComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -65,7 +67,8 @@ import { HelpCompComponent } from './help-comp/help-comp.component';
       { path: "gamelist", component: GameListComponent },
       { path: "forgot-password", component: ForgotPasswordComponent },
       {path: "event", component: EventsComponent},
-      { path: "password-reset", component: ResponseResetComponent }
+      { path: "password-reset", component: ResponseResetComponent },
+      { path: "game-create", component: GameCreateComponent }
     ])
   ],
   providers: [],
