@@ -8,6 +8,7 @@
     {
         Task<string?> Login(LoginModel model);
         Task<string?> Register(RegistrationModel model);
+        Task Logout();
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -56,6 +57,11 @@
             return user.Id;
 
 
+        }
+
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }

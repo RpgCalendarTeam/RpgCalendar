@@ -19,6 +19,14 @@
         }
 
         [HttpGet]
-        public async Task<List<User>> Get() => await _userService.GetPlayersList();
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<User?> GetPlayer() => await _userService.GetPlayer();
+
+        [HttpGet("all")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<List<User>> GetAllPlayers() => await _userService.GetPlayersList();
+
     }
 }

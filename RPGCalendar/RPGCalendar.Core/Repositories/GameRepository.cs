@@ -13,6 +13,7 @@
     public interface IGameRepository : IEntityRepository<Game>
     {
         Task<Game?> AddNewGame(int gameId, User user);
+        Task<Game?> AddNewGame(int gameId, User user, string playerClass, string playerBio);
     }
     public class GameRepository : EntityRepository<Game>, IGameRepository
     {
@@ -51,6 +52,16 @@
             return game;
         }
 
-            
+        public async Task<Game?> AddNewGame(int gameId, User user, string playerClass, string playerBio)
+        {
+            var game = await FetchByIdAsync(gameId);
+            if (game is null || game.IsInGame(user.Id))
+                return game;
+            game.GameUsers.Add(new GameUser(user.Id, user, game.Id, game, playerClass, playerBio));
+            await DbContext.SaveChangesAsync();
+            return game;
+        }
+
+
     }
 }

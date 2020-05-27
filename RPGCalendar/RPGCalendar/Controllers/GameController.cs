@@ -29,6 +29,19 @@
                 return NotFound();
             return Ok(game);
         }
+
+        [HttpPost("add/{id},{pClass},{pBio}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> AddGame(int id, string pClass, string pBio)
+        {
+            Game? game = await _gameService.AddNew(id, pClass, pBio);
+            if (game is null)
+                return NotFound();
+            return Ok(game);
+        }
+
         [HttpGet]
         public async Task<IEnumerable<Game>> Get() => await _gameService.GetForUserAsync();
 

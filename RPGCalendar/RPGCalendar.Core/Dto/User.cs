@@ -18,6 +18,9 @@
             get => _email;
             set => _email = value ?? throw new ArgumentNullException(nameof(Email));
         }
+
+        public string? Bio { get; set; }
+        public string? Class { get; set; }
     }
 
     public class UserInput : UserInfo
