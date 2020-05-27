@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Core.Dto;
     using Core.Services;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
