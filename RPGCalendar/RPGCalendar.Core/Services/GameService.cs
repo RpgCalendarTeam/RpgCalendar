@@ -13,6 +13,7 @@
     public interface IGameService
     {
         Task<Dto.Game?> AddNew(int gameId);
+        Task<Dto.Game?> AddNew(int gameId, string playerClass, string playerBio);
         Task<Dto.Game?> CreateAsync(Dto.GameInput dto);
         Task<List<Dto.Game>> GetForUserAsync();
         Task<Dto.Game?> GetByIdForUserAsync(int id);
@@ -87,6 +88,20 @@
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
 
             var game = await _gameRepository.AddNewGame(gameId, user);
+
+            if (game is null)
+                return null;
+
+            _sessionService.SetCurrentGameId(game.Id);
+            return _mapper.Map<Game, Dto.Game>(game);
+        }
+
+        public async Task<Dto.Game?> AddNew(int gameId, string playerClass, string playerBio)
+        {
+            var userId = _sessionService.GetCurrentUserId();
+            User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
+
+            var game = await _gameRepository.AddNewGame(gameId, user, playerClass, playerBio);
 
             if (game is null)
                 return null;

@@ -12,8 +12,10 @@
     {
         public Task<Dto.User?> RegisterUser(UserInput userInput);
         public Task<Dto.User?> LoginUser(string authId);
+        public void LogoutUser();
         public Task<User?> GetUserById(int userId);
         public Task<List<Dto.User>> GetPlayersList();
+        public Task<Dto.User?> GetPlayer();
     }
     public class UserService : IUserService
     {
@@ -45,6 +47,12 @@
             return _mapper.Map<User, Dto.User>(user);
         }
 
+        public void LogoutUser()
+        {
+            _sessionService.ClearSessionUser();
+            _sessionService.ClearSessionGame();
+        }
+
         public async Task<User?> GetUserById(int userId)
             => await _userRepository.GetUserById(userId);
 
@@ -52,9 +60,31 @@
         {
             var gameId = _sessionService.GetCurrentGameId();
             var players = (await _userRepository.FetchAllAsync())
-                      .Where(a => a.GameUsers.Any(e => e.GameId == gameId));
-            return _mapper.Map<List<User>, List<Dto.User>>(players.ToList());
-            //return players.ToList();
+                .Where(a => a.GameUsers.Any(e => e.GameId == gameId))
+                .Select(MapUser);
+            return players.ToList();
+        }
+        
+        public async Task<Dto.User?> GetPlayer()
+        {
+            var player = await _userRepository.FetchByIdAsync(_sessionService.GetCurrentUserId());
+            if (player is null)
+                return null;
+            return MapUser(player);
+        }
+
+        public Dto.User MapUser(User user)
+        {
+            var gameUser = user.GameUsers.First(e => e.GameId == _sessionService.GetCurrentGameId());
+            var dtoUser = new Dto.User
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Class = gameUser.PlayerClass,
+                Bio = gameUser.PlayerBio,
+                Id = user.Id
+            };
+            return dtoUser;
         }
     }
 }

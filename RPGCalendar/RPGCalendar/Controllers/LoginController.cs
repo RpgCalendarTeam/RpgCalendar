@@ -15,7 +15,7 @@ namespace RPGCalendar.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly IUserService _userRepository;
+        private readonly IUserService _userService;
 
 
 
@@ -24,7 +24,7 @@ namespace RPGCalendar.Controllers
             IUserService userRepository)
         {
             _authenticationService = authenticationService;
-            _userRepository = userRepository;
+            _userService = userRepository;
         }
 
         [HttpPost]
@@ -39,11 +39,20 @@ namespace RPGCalendar.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
 
-            var user = await _userRepository.LoginUser(result);
+            var user = await _userService.LoginUser(result);
             return Ok(user);
 
         }
 
+        [HttpPost("logout")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Logout()
+        {
+            _userService.LogoutUser();
+            await _authenticationService.Logout();
+            return NoContent();
+        }
 
     }
 }
