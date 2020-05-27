@@ -15,6 +15,26 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    command: install
+    workingDir: RPGCalendar/rpg-calendar-client
+
+- task: Npm@1
+  displayName: 'Build Angular'
+  inputs:
+    command: custom
+    customCommand: run build --prod
+    workingDir: RPGCalendar/rpg-calendar-client
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
