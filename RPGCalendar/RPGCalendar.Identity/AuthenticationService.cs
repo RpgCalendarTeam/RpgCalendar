@@ -9,6 +9,7 @@
         Task<string?> Login(LoginModel model);
         Task<string?> Register(RegistrationModel model);
         Task Logout();
+        Task<string?> ChangePassword(string userEmail, string currentPassword, string newPassword);
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -62,6 +63,17 @@
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<string?> ChangePassword(string userEmail, string currentPassword, string newPassword)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(userEmail);
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (result is null)
+                return null;
+            if (!result.Succeeded)
+                return "Error: " + result.ToString();
+            return result.ToString();
         }
     }
 }
