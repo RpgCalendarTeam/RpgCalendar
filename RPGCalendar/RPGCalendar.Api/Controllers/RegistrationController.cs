@@ -14,14 +14,14 @@
     public class RegistrationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly IUserService _userRepository;
+        private readonly IUserService _userService;
 
 
         public RegistrationController(IAuthenticationService authenticationService,
                                       IUserService userRepository)
         {
             _authenticationService = authenticationService;
-            _userRepository = userRepository;
+            _userService = userRepository;
         }
 
         [HttpPost]
@@ -34,7 +34,7 @@
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            var user = await _userRepository.RegisterUser(new UserInput
+            var user = await _userService.RegisterUser(new UserInput
             {
                 Username = model.Username!,
                 Email = model.Email!,
@@ -42,6 +42,23 @@
             });
             return Ok(user);
 
+        }
+
+        [HttpPost("change/{userEmail},{currentPassword},{newPassword},{confirmPassword}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> ChangePassword(string userEmail, string currentPassword, string newPassword, string confirmPassword)
+        {
+            if(currentPassword.Equals(newPassword) || !newPassword.Equals(confirmPassword))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            var result = await _authenticationService.ChangePassword(userEmail, currentPassword, newPassword);
+            if( result is null )
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+            return Ok(result);
         }
 
     }
