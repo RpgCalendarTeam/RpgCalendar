@@ -19,14 +19,12 @@
     {
         private readonly ISessionService _sessionService;
         private readonly IUserRepository _userRepository;
-        private readonly ICalendarRepository _calendarRepository;
 
-        public GameRepository(ISessionService sessionService, ApplicationDbContext dbContext, IUserRepository userRepository, ICalendarRepository calendarRepository)
+        public GameRepository(ISessionService sessionService, ApplicationDbContext dbContext, IUserRepository userRepository)
             : base(dbContext)
         {
             _sessionService = sessionService;
             _userRepository = userRepository;
-            _calendarRepository = calendarRepository;
         }
 
         public override async Task<Game?> FetchByIdAsync(int id)
@@ -39,7 +37,9 @@
                 .Include(g => g.Events)
                 .Include(g => g.Notes)
                 .Include(g => g.Notifications)
-                .Include(g => g.GameTime)
+                .Include(g => g.Calendar)
+                .Include(g => g.Calendar!.Months)
+                .Include(g => g.Calendar!.DaysOfWeek)
                 .ToListAsync();
 
         public async Task<Game?> AddNewGame(int gameId, User user)

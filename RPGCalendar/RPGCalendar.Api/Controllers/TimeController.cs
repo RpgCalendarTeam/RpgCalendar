@@ -12,19 +12,17 @@
     public class TimeController : ControllerBase
     {
         protected ITimeService TimeService { get; }
-        protected ICalendarService CalendarRepository { get; }
-        public TimeController(ITimeService time, ICalendarService calendar)
+        public TimeController(ITimeService time)
         {
             TimeService = time ?? throw new ArgumentNullException(nameof(TimeService));
-            CalendarRepository = calendar ?? throw new ArgumentNullException(nameof(CalendarRepository));
         }
 
-        [HttpPut("{id,sec}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Calendar>> Put(int id, long sec)
+        public async Task<ActionResult<Calendar>> Put([FromBody] TimeChange timeChange)
         {
-            var result = await TimeService.ProceedTime(id,sec);
+            var result = await TimeService.ProceedTime(timeChange);
             if (result is null)
                 return NotFound();
             return Ok(result);

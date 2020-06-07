@@ -37,7 +37,6 @@
     "oidc-client": "^1.9.1",
     "popper.js": "^1.16.0",
     "rxjs": "^6.5.3",
-    "sqlite3": "^4.1.1",
     "zone.js": "0.9.1"
   },
   "devDependencies": {

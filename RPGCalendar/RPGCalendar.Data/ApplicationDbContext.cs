@@ -23,7 +23,8 @@
         public DbSet<Notification> GameNotifications { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Calendar> Calendars { get; set; }
-        
+        public DbSet<Month> Months { get; set; }
+        public DbSet<Day> Days { get; set; }
         private IHttpContextAccessor HttpContextAccessor { get; set; }
 #nullable enable
 
@@ -44,21 +45,6 @@
             optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         }
 
-        protected void OnCalendarCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Calendar>()
-                .Property(e => e.Months)
-                .HasConversion(
-                    v => string.Join(',', v!),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
-
-            modelBuilder.Entity<Calendar>()
-                .Property(e => e.Days)
-                .HasConversion(
-                    v => string.Join(',', v!),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GameUser>()
@@ -73,8 +59,9 @@
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.GameUsers)
                 .HasForeignKey(pt => pt.UserId);
-            OnCalendarCreating(modelBuilder);
-            //    _ = modelBuilder?.Entity<UserGroup>().HasKey(ug => new { ug.UserId, ug.GroupId });
+            modelBuilder.Entity<Game>()
+                .HasOne<Calendar>().WithOne(b => b.Game!)
+                .HasForeignKey<Calendar>(e => e.GameId);
 
         }
 
@@ -100,9 +87,9 @@
                 if (entry.Entity is FingerPrintEntityBase fingerPrintEntry)
                 {
                     fingerPrintEntry.CreatedOn = DateTime.UtcNow;
-                    fingerPrintEntry.CreatedBy = string.Empty; //HttpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value ?? string.Empty;
+                    fingerPrintEntry.CreatedBy = string.Empty; 
                     fingerPrintEntry.ModifiedOn = DateTime.UtcNow;
-                    fingerPrintEntry.ModifiedBy = string.Empty; // HttpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value ?? string.Empty;
+                    fingerPrintEntry.ModifiedBy = string.Empty;
                 }
             }
 
@@ -114,7 +101,7 @@
                     ResetValue(entry, nameof(FingerPrintEntityBase.CreatedBy));
 
                     fingerPrintEntry.ModifiedOn = DateTime.UtcNow;
-                    fingerPrintEntry.ModifiedBy = string.Empty; // HttpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier).Value ?? string.Empty;
+                    fingerPrintEntry.ModifiedBy = string.Empty;
                 }
             }
         }
