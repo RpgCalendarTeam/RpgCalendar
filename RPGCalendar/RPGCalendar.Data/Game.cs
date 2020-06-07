@@ -30,7 +30,8 @@
         }
         private string _gameSystem = string.Empty;
         public int GameMaster { get; set; }
-        public Calendar? GameTime { get; set; }
+        public int CalendarId { get; set; }
+        public Calendar? Calendar { get; set; }
 
         //List of game items for game instance
         public ICollection<GameUser> GameUsers { get; set; } = new HashSet<GameUser>();

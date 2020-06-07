@@ -102,8 +102,7 @@ namespace RPGCalendar.Api
                 .AddTransient<INotificationRepository, NotificationRepository>()
                 .AddTransient<IUserRepository, UserRepository>();
 
-            services.AddTransient<ICalendarService, CalendarService>()
-                .AddTransient<IEventService, EventService>()
+            services.AddTransient<IEventService, EventService>()
                 .AddTransient<IGameService, GameService>()
                 .AddTransient<IItemService, ItemService>()
                 .AddTransient<INoteService, NoteService>()
