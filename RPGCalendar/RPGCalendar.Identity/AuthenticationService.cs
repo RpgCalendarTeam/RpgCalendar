@@ -9,7 +9,11 @@
         Task<string?> Login(LoginModel model);
         Task<string?> Register(RegistrationModel model);
         Task Logout();
+        Task<ApplicationUser> FindByEmailAsync(string email);
+        Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
         Task<string?> ChangePassword(string userEmail, string currentPassword, string newPassword);
+        Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string password);
+
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -63,6 +67,21 @@
             if (!result.Succeeded)
                 return "Error: " + result.ToString();
             return result.ToString();
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
         }
     }
 }
