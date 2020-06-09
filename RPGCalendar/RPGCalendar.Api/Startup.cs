@@ -41,7 +41,11 @@ namespace RPGCalendar.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddTransient<IEmailService, EmailService>();
 
             services.AddControllersWithViews(options =>
             {
@@ -77,7 +81,6 @@ namespace RPGCalendar.Api
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
-
                 // Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
@@ -87,8 +90,15 @@ namespace RPGCalendar.Api
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = false;
+
+                // Token settings.
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
             });
 
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(2);
+            });
 
             services.Configure<RpgCalendarSettings>(Configuration.GetSection(nameof(RpgCalendarSettings)));
 
