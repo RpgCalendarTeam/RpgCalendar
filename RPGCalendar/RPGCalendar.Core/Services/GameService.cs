@@ -23,6 +23,7 @@
         Task<Dto.Game?> UpdateAsync(int id, Dto.GameInput entity);
         Task<bool> DeleteAsync(int id);
         Task<Game?> GetById(int gameId);
+        Task<Game?> GetCurrentGameAsync();
 
     }
     public class GameService : IGameService
@@ -121,5 +122,14 @@
 
         public Task<Game?> GetById(int gameId)
             => _gameRepository.FetchByIdAsync(gameId);
+
+        public async Task<Game?> GetCurrentGameAsync()
+        {
+            var gameId = _sessionService.GetCurrentGameId();
+            var game = await _gameRepository.FetchByIdAsync(gameId);
+            if (game is null)
+                return null;
+            return game;
+        }
     }
 }
