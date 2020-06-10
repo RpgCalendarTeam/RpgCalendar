@@ -28,13 +28,13 @@
         }
 
         //testing sendemail
-        [HttpGet]
-        public async Task Get()
-        {
-            var message = new Message(new string[] { "happylin1103@gmail.com" }, "Test email", "This is the content from our email.");
-            await _emailService.SendEmailAsync(message);
+        //[HttpGet]
+        //public async Task Get()
+        //{
+        //    var message = new Message(new string[] { "example@gmail.com" }, "Test email", "This is the content from our email.");
+        //    await _emailService.SendEmailAsync(message);
 
-        }
+        //}
 
 
         [HttpPost]
@@ -76,8 +76,6 @@
 
 
         [HttpPost("forgotpassword")]
-        //this line was giving me 400 api response
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(string email)
         {
             var user = await _authenticationService.FindByEmailAsync(email);
@@ -86,24 +84,23 @@
 
             var token = await _authenticationService.GeneratePasswordResetTokenAsync(user);
 
-            var message = new Message(new string[] { user.Email }, "Reset password token", token);//token.ToString());
+            var message = new Message(new string[] { user.Email }, "Reset password token", "Copy and paste this token: \n"+token);
             await _emailService.SendEmailAsync(message);
 
             return StatusCode(200);
         }
 
         [HttpPost("resetpassword")]
-        //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(string email, string newPassword, string confirmPassword, string token)
+        public async Task<ActionResult> ResetPassword(ResetPasswordModel model)
         {
-            if (!newPassword.Equals(confirmPassword))
+            if (model.Password is null || model.Email is null || model.Token is null || !model.Password.Equals(model.ConfirmPassword))
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
-            var user = await _authenticationService.FindByEmailAsync(email);
+            var user = await _authenticationService.FindByEmailAsync(model.Email);
             if (user is null)
                 return NoContent();
-            var resetPassResult = await _authenticationService.ResetPasswordAsync(user, token, newPassword);
+            var resetPassResult = await _authenticationService.ResetPasswordAsync(user, model.Token, model.Password);
             if (!resetPassResult.Succeeded)
                 return NoContent();
             return NoContent();
