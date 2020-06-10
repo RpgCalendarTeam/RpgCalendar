@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+//import {NoteComponent} from '../modals/note';
+import { MatDialog } from '@angular/material/dialog';
+import { NoteComponent } from '../modals/note/note.component';
+
+
 
 @Component({
   selector: 'app-game-overview',
@@ -6,10 +11,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./game-overview.component.css']
 })
 export class GameOverviewComponent implements OnInit {
+  constructor(public dialog: MatDialog) {}
 
-  constructor() { }
+  openDialog() {
+    this.dialog.open(NoteComponent, {
+      data: {
+        animal: 'panda'
+      }
+    });
+  }
 
   ngOnInit() {
   }
 
-}
+}//end GameOverviewComponent

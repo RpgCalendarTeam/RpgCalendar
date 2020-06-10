@@ -30,11 +30,3 @@
 
 }
 
-.button{
-    float: right;
-    background-color: slategray;
-    color: white;
-}
-.button:hover{
-    background-color: darkslategray;
-}
