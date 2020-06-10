@@ -12,9 +12,9 @@
         [Required]
         public decimal Quality { get; set; }
         [Required]
-        public decimal QuanityDegration { get; set; }
+        public decimal QuantityDenigration { get; set; }
         [Required]
-        public decimal QualityDegration { get; set; }
+        public decimal QualityDenigration { get; set; }
     }
 
     public class Item : ItemInput, IEntity

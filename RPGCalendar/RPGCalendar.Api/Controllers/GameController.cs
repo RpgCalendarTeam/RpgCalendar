@@ -18,18 +18,6 @@
             this._gameService = service;
         }
 
-        //[HttpPost("add/{id}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesDefaultResponseType]
-        //public async Task<IActionResult> AddGame(int id)
-        //{
-        //    Game? game = await _gameService.AddNew(id);
-        //    if (game is null)
-        //        return NotFound();
-        //    return Ok(game);
-        //}
-
         [HttpGet("currentgame")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,13 +29,13 @@
             return Ok(game);
         }
 
-        [HttpPost("add/{id},{pClass},{pBio}")]
+        [HttpPost("add/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> AddGame(int id, string pClass, string pBio)
+        public async Task<IActionResult> AddGame(int id, [FromBody]PlayerInfo playerInfo)
         {
-            Game? game = await _gameService.AddNew(id, pClass, pBio);
+            Game? game = await _gameService.AddNew(id, playerInfo);
             if (game is null)
                 return NotFound();
             return Ok(game);

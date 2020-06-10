@@ -15,15 +15,14 @@
 
     public interface IGameService
     {
-        Task<Dto.Game?> AddNew(int gameId);
-        Task<Dto.Game?> AddNew(int gameId, string playerClass, string playerBio);
+        Task<Dto.Game?> AddNew(int gameId, PlayerInfo playerInfo);
         Task<Dto.Game?> CreateAsync(Dto.GameInput input);
         Task<List<Dto.Game>> GetForUserAsync();
         Task<Dto.Game?> GetByIdForUserAsync(int id);
         Task<Dto.Game?> UpdateAsync(int id, Dto.GameInput entity);
         Task<bool> DeleteAsync(int id);
         Task<Game?> GetById(int gameId);
-        Task<Game?> GetCurrentGameAsync();
+        Task<Dto.Game?> GetCurrentGameAsync();
 
     }
     public class GameService : IGameService
@@ -92,26 +91,12 @@
         public Task<bool> DeleteAsync(int id)
             => _gameRepository.DeleteAsync(id);
 
-        public async Task<Dto.Game?> AddNew(int gameId)
+        public async Task<Dto.Game?> AddNew(int gameId, PlayerInfo player)
         {
             var userId = _sessionService.GetCurrentUserId();
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
 
-            var game = await _gameRepository.AddNewGame(gameId, user);
-
-            if (game is null)
-                return null;
-
-            _sessionService.SetCurrentGameId(game.Id);
-            return _mapper.Map<Game, Dto.Game>(game);
-        }
-
-        public async Task<Dto.Game?> AddNew(int gameId, string playerClass, string playerBio)
-        {
-            var userId = _sessionService.GetCurrentUserId();
-            User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
-
-            var game = await _gameRepository.AddNewGame(gameId, user, playerClass, playerBio);
+            var game = await _gameRepository.AddNewGame(gameId, user, player.Class, player.Bio);
 
             if (game is null)
                 return null;
@@ -123,13 +108,13 @@
         public Task<Game?> GetById(int gameId)
             => _gameRepository.FetchByIdAsync(gameId);
 
-        public async Task<Game?> GetCurrentGameAsync()
+        public async Task<Dto.Game?> GetCurrentGameAsync()
         {
             var gameId = _sessionService.GetCurrentGameId();
             var game = await _gameRepository.FetchByIdAsync(gameId);
             if (game is null)
                 return null;
-            return game;
+            return _mapper.Map<Dto.Game>(game);
         }
     }
 }
