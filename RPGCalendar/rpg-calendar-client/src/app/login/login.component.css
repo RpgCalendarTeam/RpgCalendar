@@ -1,5 +1,5 @@
 .container {
-    background:rgba(2, 60, 117, 0.5);
+    background:rgba(5, 5, 5, 0.5);
     border-radius: 5px;
     box-shadow: 0 1.5px 0 0 rgba(0,0,0,0.1);
     width:409px;
@@ -75,13 +75,14 @@
     background-color: #eeeeee;
   }
   .form-login input[type="submit"] {
-    background-color: rgb(86, 69, 238);
+    background-color: rgb(247, 21, 4);
     color: #eee;
     font-weight: bold;
     text-transform: uppercase;
   }
+
   .form-login input[type="submit"]:focus, .form-login input[type="submit"]:hover {
-    background-color: #120a2e;
+    background-color: #0505053a;
   }
   .form-field {
     display: -webkit-box;
