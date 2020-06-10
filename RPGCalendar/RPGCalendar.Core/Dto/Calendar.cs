@@ -37,7 +37,7 @@
         public int? Month { get; set; }
         public int? Date { get; set; }
         public int? Hour { get; set; }
-        public int? Minutes { get; set; }
+        public int? Minute { get; set; }
         public int? Second { get; set; }
         public string? Day { get; set; }
         public string? MonthName { get; set; }

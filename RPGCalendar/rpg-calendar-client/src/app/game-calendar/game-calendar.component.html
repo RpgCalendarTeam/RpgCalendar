@@ -1,8 +1,6 @@
-<div class="borderWrap">
-    <h2 class="month-name">{{monthName}}</h2>
-    <div class="wrapper" [ngStyle]="{ 'grid-template-columns': getTemplateFormat()}" >
-        <div class="box head" *ngFor="let value of headRow"><h4>{{value}}</h4></div>
-        <div class="box" *ngFor="let unit of units;"><h4>{{unit}}</h4></div>
-    </div>
+<div>
+  <button class="button">Notes</button>
 </div>
-    
+<div class="borderWrap">
+  <h2 class="month-name">{{ calendar.monthName }}</h2>
+</div>
