@@ -12,24 +12,28 @@
 
     public interface IGameRepository : IEntityRepository<Game>
     {
-        Task<Game?> AddNewGame(int gameId, User user);
         Task<Game?> AddNewGame(int gameId, User user, string playerClass, string playerBio);
     }
     public class GameRepository : EntityRepository<Game>, IGameRepository
     {
-        private readonly ISessionService _sessionService;
-        private readonly IUserRepository _userRepository;
 
-        public GameRepository(ISessionService sessionService, ApplicationDbContext dbContext, IUserRepository userRepository)
+
+        public GameRepository(ApplicationDbContext dbContext)
             : base(dbContext)
         {
-            _sessionService = sessionService;
-            _userRepository = userRepository;
+
         }
 
         public override async Task<Game?> FetchByIdAsync(int id)
-            => (await FetchAllAsync())
-                .First(x => x.Id == id);
+            => await Query.Include(g => g.GameUsers)
+                .Include(g => g.Items)
+                .Include(g => g.Events)
+                .Include(g => g.Notes)
+                .Include(g => g.Notifications)
+                .Include(g => g.Calendar)
+                .Include(g => g.Calendar!.Months)
+                .Include(g => g.Calendar!.DaysOfWeek)
+                .FirstAsync(x => x.Id == id);
 
         public override async Task<List<Game>> FetchAllAsync() =>
             await Query.Include(g => g.GameUsers)
@@ -41,16 +45,6 @@
                 .Include(g => g.Calendar!.Months)
                 .Include(g => g.Calendar!.DaysOfWeek)
                 .ToListAsync();
-
-        public async Task<Game?> AddNewGame(int gameId, User user)
-        {
-            var game = await FetchByIdAsync(gameId);
-            if (game is null || game.IsInGame(user.Id))
-                return game;
-            game.GameUsers.Add(new GameUser(user.Id, user, game.Id, game));
-            await DbContext.SaveChangesAsync();
-            return game;
-        }
 
         public async Task<Game?> AddNewGame(int gameId, User user, string playerClass, string playerBio)
         {

@@ -30,7 +30,7 @@
                 .ForMember(des => des.Hour,
                     opt => opt.MapFrom(
                         src => src.GetHour()))
-                .ForMember(des => des.Minutes,
+                .ForMember(des => des.Minute,
                     opt => opt.MapFrom(
                         src => src.GetMinutes()))
                 .ForMember(des => des.Second,

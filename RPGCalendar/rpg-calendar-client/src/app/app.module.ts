@@ -22,6 +22,9 @@ import { ResponseResetComponent} from  './response-reset/response-reset.componen
 import { EventsComponent } from './events/events.component';
 import { HelpCompComponent } from './help-comp/help-comp.component';
 import { GameCreateComponent } from './game-create/game-create.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoteComponent } from './modals/note/note.component';
+import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 
 
 @NgModule({
@@ -42,13 +45,15 @@ import { GameCreateComponent } from './game-create/game-create.component';
     ForgotPasswordComponent,
     EventsComponent,
     ResponseResetComponent,
-    GameCreateComponent
+    GameCreateComponent,
+    NoteComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
     RouterModule.forRoot([
       { path: '', component: LoginComponent, pathMatch: 'full' },
       //{ path: '', pathMatch: 'full', redirectTo: 'login'},
@@ -63,7 +68,11 @@ import { GameCreateComponent } from './game-create/game-create.component';
       {path: "event", component: EventsComponent},
       { path: "password-reset", component: ResponseResetComponent },
       { path: "game-create", component: GameCreateComponent }
-    ])
+    ]),
+    BrowserAnimationsModule
+  ],
+  entryComponents: [
+    NoteComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

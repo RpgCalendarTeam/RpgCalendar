@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-game-create',
   templateUrl: './game-create.component.html',
-  styleUrls: ['./game-create.component.css']
+  styleUrls: ['./game-create.component.css'],
 })
 export class GameCreateComponent implements OnInit {
+  @ViewChild('createGameForm', { static: false }) createGameForm: NgForm;
+  gameForm;
+  constructor() {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
-
+  submitGameForm() {}
 }
