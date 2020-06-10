@@ -57,7 +57,7 @@ import { GameCreateComponent } from './game-create/game-create.component';
       { path: 'login', component: LoginComponent },
       { path: 'admin', component: AdminComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'help', component: HelpCompComponent },
+      { path: 'help', component: ComponentHelpComponent },
       { path: "gamelist", component: GameListComponent },
       { path: "forgot-password", component: ForgotPasswordComponent },
       {path: "event", component: EventsComponent},
