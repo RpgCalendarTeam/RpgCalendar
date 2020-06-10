@@ -27,13 +27,12 @@
         {
             if (model.Email is null)
                 return null;
-            string? userId = null;
             var user = await _userManager.Users.FirstAsync(ur => ur.Email == model.Email);
             var result = await _signInManager.PasswordSignInAsync(user.UserName,
                 model.Password, model.RememberMe, lockoutOnFailure: false);
-            userId = user.Id;
-
-            return userId;
+            return result.Succeeded
+                ? user.Id
+                : null;
         }
 
         public async Task<string?> Register(RegistrationModel model)
