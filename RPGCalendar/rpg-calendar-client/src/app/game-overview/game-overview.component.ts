@@ -15,9 +15,6 @@ export class GameOverviewComponent implements OnInit {
 
   openDialog() {
     this.dialog.open(NoteComponent, {
-      data: {
-        animal: 'panda'
-      }
     });
   }
 
