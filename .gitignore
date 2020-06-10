@@ -275,3 +275,4 @@ __pycache__/
 
 *.db
 *.sqlite
+.DS_Store
