@@ -1,0 +1,32 @@
+.btn1{
+    float: right;
+    background-color: lightgray;
+}
+
+.btn1:hover{
+    background-color: forestgreen;
+}
+
+.delBtn{
+    float: right;
+    color: white;
+    display: block;
+    background-color: red;
+    border-inline-end-color: black;
+}
+
+.mat-typography, .btn1, .matBtn,.matBtnCancel{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.matBtn,.matBtnCancel{
+    background-color: lightgray;
+}
+
+.matBtn:hover{
+    background-color: forestgreen;
+}
+.matBtnCancel:hover{
+    background-color: red;
+}
+
