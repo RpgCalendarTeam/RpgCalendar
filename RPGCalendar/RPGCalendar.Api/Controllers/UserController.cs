@@ -27,5 +27,18 @@
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<List<User>> GetAllPlayers() => await _userService.GetPlayersList();
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<User?> GetUser(int id)
+        {
+            User? user = await _userService.GetUserByIdAsync(id);
+            if (user is null)
+            {
+                return null;
+            }
+            return user;
+        }
     }
 }
