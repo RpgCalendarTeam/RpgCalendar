@@ -42,7 +42,7 @@ export class ForgotPasswordComponent implements OnInit {
           this.successMessage = "Reset password link send to email successfully.";
           setTimeout(() => {
             this.successMessage = null;
-            this.router.navigate(['sign-in']);
+            this.router.navigate(['home']);
           }, 3000);
         },
         err => {

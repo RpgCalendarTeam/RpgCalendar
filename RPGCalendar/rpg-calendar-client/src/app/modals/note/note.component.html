@@ -1,4 +1,6 @@
 <h1 mat-dialog-title class="mat-typography">Notes</h1>
+<div class="note-b">
+
 <mat-dialog-content class="mat-typography" *ngIf="!addDisplay">
   Current Notes
   <ul>
@@ -41,3 +43,4 @@
   <button class="matBtnCancel" mat-button mat-dialog-close>Cancel</button>
   <button class="matBtn" mat-button (click)="flipBoolean()" *ngIf="!addDisplay">Add Note</button>
 </mat-dialog-actions>
+</div>

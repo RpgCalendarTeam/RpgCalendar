@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     console.log(form.value);
     this.authService.signIn(form.value).subscribe((res)=>{
       console.log("Logged in!");
-      this.router.navigateByUrl('gameoverview');
+      this.router.navigateByUrl('gamelist');
     });    
   }
 
