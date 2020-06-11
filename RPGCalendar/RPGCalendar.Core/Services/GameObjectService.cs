@@ -21,8 +21,8 @@
         where TDto : class, TInputDto
         where TInputDto : class
     {
-        private readonly ISessionService _sessionService;
-        private readonly IGameService _gameService;
+        protected readonly ISessionService _sessionService;
+        protected readonly IGameService _gameService;
 
         protected GameObjectService(IMapper mapper, 
             ISessionService sessionService, 

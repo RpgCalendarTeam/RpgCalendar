@@ -6,6 +6,8 @@ namespace RPGCalendar.Data.GameObjects
 
     public class Item : GameObject
     {
+        public int UserId { get; set; }
+
         private string _name = string.Empty;
 
         public string Name

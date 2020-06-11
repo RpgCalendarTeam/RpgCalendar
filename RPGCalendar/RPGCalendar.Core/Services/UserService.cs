@@ -16,6 +16,7 @@
         public Task<User?> GetUserById(int userId);
         public Task<List<Dto.User>> GetPlayersList();
         public Task<Dto.User?> GetPlayer();
+        public Task<Dto.User?> GetUserByIdAsync(int userId);
     }
     public class UserService : IUserService
     {
@@ -71,6 +72,16 @@
             if (player is null)
                 return null;
             return MapUser(player);
+        }
+
+        public async Task<Dto.User?> GetUserByIdAsync(int id)
+        {
+            var gameId = _sessionService.GetCurrentGameId();
+            var user = (await _userRepository.FetchAllAsync())
+                .First(a => a.GameUsers.Any(e => e.GameId == gameId && e.User.Id == id));
+            if (user is null)
+                return null;
+            return MapUser(user);
         }
 
         public Dto.User MapUser(User user)
