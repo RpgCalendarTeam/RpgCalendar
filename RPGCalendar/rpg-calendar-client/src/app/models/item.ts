@@ -6,4 +6,5 @@ export class Item {
   quantityDenigration: number;
   qualityDenigration: number;
   id: number;
+  userId: number;
 }
