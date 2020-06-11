@@ -13,6 +13,7 @@ import { NoteComponent } from '../modals/note/note.component';
 export class GameOverviewComponent implements OnInit {
   constructor(public dialog: MatDialog) {}
 
+
   openDialog() {
     this.dialog.open(NoteComponent, {
     });

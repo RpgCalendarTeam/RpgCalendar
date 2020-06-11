@@ -27,6 +27,7 @@ import { NoteComponent } from './modals/note/note.component';
 import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
