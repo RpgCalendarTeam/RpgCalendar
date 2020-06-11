@@ -1,15 +1,43 @@
-<h1 mat-dialog-title>Favorite Animal</h1>
-<div mat-dialog-content>
-  My favorite animal is:
+<h1 mat-dialog-title class="mat-typography">Notes</h1>
+<mat-dialog-content class="mat-typography" *ngIf="!addDisplay">
+  Current Notes
   <ul>
-    <li>
-      <span *ngIf="data.animal === 'panda'">&#10003;</span> Panda
-    </li>
-    <li>
-      <span *ngIf="data.animal === 'unicorn'">&#10003;</span> Unicorn
-    </li>
-    <li>
-      <span *ngIf="data.animal === 'lion'">&#10003;</span> Lion
+    <li *ngFor="let note of notes">
+      <button class="delBtn" (click)="deleteNote(note.id)">X</button>
+      <h2>{{ note.title }}</h2>
+      <p>{{ note.text }}</p>
     </li>
   </ul>
-</div>
+</mat-dialog-content>
+
+<mat-dialog-content class="mat-typography" *ngIf="addDisplay">
+  <h3>Add a Note</h3>
+  <form #addNoteForm="ngForm" (submit)="addNote()">
+    <tr>
+      <td>Note Title:</td>
+      <td>
+        <input
+          type="text"
+          name="noteTitle"
+          [(ngModel)]="noteTitle"
+          required
+        />
+      </td>
+    </tr>
+    <tr>
+      <td>Note Text:</td>
+      <td>
+        <textarea rows="5" cols="30" name="noteText" [(ngModel)]="noteText" required ></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <button class="btn1" value="Add" type="submit">Add</button>
+      </td>
+    </tr>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="matBtnCancel" mat-button mat-dialog-close>Cancel</button>
+  <button class="matBtn" mat-button (click)="flipBoolean()" *ngIf="!addDisplay">Add Note</button>
+</mat-dialog-actions>
