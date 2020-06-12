@@ -17,10 +17,11 @@ export class UserService {
   GetSelectedUser(): Observable<Player> {
     if (this.selectedUserId) {
       return this.httpClient.get<Player>(
-        this.actionUrl + '/user/' + this.selectedUserId
+        this.actionUrl + '/' + this.selectedUserId
       );
     }
   }
+
   GetCurrentUser(): Observable<Player> {
     return this.httpClient.get<Player>(this.actionUrl);
   }

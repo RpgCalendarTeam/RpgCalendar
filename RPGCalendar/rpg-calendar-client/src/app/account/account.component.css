@@ -10,10 +10,38 @@
   float: right;
 }
 
+.deleteBtn{
+  background-color: crimson;
+}
+
+#items {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#items td, #users th{
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#items tr:nth-child(even){background-color: darkslategray;}
+
+
+#items th{
+  border: 1px solid #ddd;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: darkgray;
+  color: white;
+}
 
 .text{
     color: black;
 }
+
+
+
 .member {
   color: grey;
   font-size: 18px;

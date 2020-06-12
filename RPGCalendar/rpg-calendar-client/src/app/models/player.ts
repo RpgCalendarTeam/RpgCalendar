@@ -3,4 +3,5 @@ export class Player {
   email: string;
   bio: string;
   class: string;
+  id: number;
 }
