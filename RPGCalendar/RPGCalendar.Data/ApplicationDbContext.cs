@@ -42,7 +42,7 @@
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("RPGCalendar.Data"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

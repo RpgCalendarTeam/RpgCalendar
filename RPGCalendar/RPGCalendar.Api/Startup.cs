@@ -57,7 +57,7 @@ namespace RPGCalendar.Api
             }).AddNewtonsoftJson();
             services.AddSwaggerDocument();
 
-            if (Env.IsProduction())
+            if (!Env.IsProduction())
             {
                 services.AddDbContext<ApplicationDbContext>();
                 services.AddDbContext<AuthenticationDbContext>();
