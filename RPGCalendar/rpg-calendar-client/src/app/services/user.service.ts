@@ -14,12 +14,13 @@ export class UserService {
   SetUserId(id: number) {
     this.selectedUserId = id;
   }
-
   GetSelectedUser(): Observable<Player> {
-    return this.httpClient.get<Player>(
-      this.actionUrl + '/' + this.selectedUserId
-    );
-}
+    if (this.selectedUserId) {
+      return this.httpClient.get<Player>(
+        this.actionUrl + '/user/' + this.selectedUserId
+      );
+    }
+  }
 
   GetCurrentUser(): Observable<Player> {
     return this.httpClient.get<Player>(this.actionUrl);

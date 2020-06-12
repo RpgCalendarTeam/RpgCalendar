@@ -1,6 +1,6 @@
 .h1{
   text-align: center;
-  color: purple;
+  color: red;
 }
 
 #players{
@@ -15,7 +15,7 @@
 }
 #players tr:nth-child(even){background-color: darkslategray;}
 
-#players tr:hover{background-color: crimson;}
+#players tr:hover{background-color: rgb(3, 3, 3);}
 
 #players th{
   border: 1px solid #ddd;
