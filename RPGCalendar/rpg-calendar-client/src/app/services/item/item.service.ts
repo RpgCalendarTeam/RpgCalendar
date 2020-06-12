@@ -16,7 +16,7 @@ export class ItemService {
   }
 
   GetUserItems(id: number): Observable<Item[]>{
-    return this.httpClient.get<Item[]>(this.actionUrl + '/' + id);
+    return this.httpClient.get<Item[]>(this.actionUrl + '/user/' + id);
   }
 
   AddItem(item: Item): Observable<Item>{

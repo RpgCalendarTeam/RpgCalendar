@@ -25,6 +25,7 @@ import { GameCreateComponent } from './game-create/game-create.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoteComponent } from './modals/note/note.component';
 import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
+import { ItemComponent } from './modals/item/item.component';
 
 
 
@@ -47,7 +48,8 @@ import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dia
     EventsComponent,
     ResponseResetComponent,
     GameCreateComponent,
-    NoteComponent
+    NoteComponent,
+    ItemComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -73,7 +75,8 @@ import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dia
     BrowserAnimationsModule
   ],
   entryComponents: [
-    NoteComponent
+    NoteComponent,
+    ItemComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

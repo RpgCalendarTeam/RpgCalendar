@@ -1,0 +1,52 @@
+<mat-dialog-content class="mat-typography">
+    <h3>Add a Item</h3>
+    <form #addItemForm="ngForm" (submit)="addItem()">
+      <tr>
+        <td>Item Name:</td>
+        <td>
+          <input
+            type="text"
+            name="itemName"
+            [(ngModel)]="itemName"
+            required
+          />
+        </td>
+      </tr>
+      <tr>
+        <td>Item Description:</td>
+        <td>
+          <textarea rows="5" cols="30" name="itemText" [(ngModel)]="itemText" required ></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>Item Quantity:</td>
+        <td>
+          <input
+            type="number"
+            name="itemQuanity "
+            [(ngModel)]="itemQuanity"
+            required
+          />
+        </td>
+      </tr>
+      <tr>
+        <td>Item Quality:</td>
+        <td>
+          <input
+            type="number"
+            name="itemQuality"
+            [(ngModel)]="itemQuality"
+            required
+          />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button style="float: right;" class="btn1" value="Add" type="submit">Add</button>
+        </td>
+      </tr>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button class="matBtnCancel" mat-button mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>

@@ -13,6 +13,7 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Custom' ">
     <StartAction>Project</StartAction>
+    <ExternalConsole>true</ExternalConsole>
     <ApplicationURL>https://localhost:44332;http://localhost:27163</ApplicationURL>
   </PropertyGroup>
   <ItemGroup>
