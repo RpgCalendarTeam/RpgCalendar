@@ -1,6 +1,6 @@
 .btn1{
     float: right;
-    background-color: lightgray;
+    background-color: rgb(211, 211, 211);
 }
 
 .btn1:hover{
@@ -14,13 +14,20 @@
     background-color: red;
     border-inline-end-color: black;
 }
+.mat-typography{
+    color: black;
+}
+
+.note-b{
+    color: goldenrod;
+}
 
 .mat-typography, .btn1, .matBtn,.matBtnCancel{
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 .matBtn,.matBtnCancel{
-    background-color: lightgray;
+    background-color: rgba(211, 211, 211, 0.863);
 }
 
 .matBtn:hover{
