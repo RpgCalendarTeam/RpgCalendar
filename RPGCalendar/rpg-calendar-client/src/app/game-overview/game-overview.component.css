@@ -2,7 +2,9 @@
     float: right;
     background-color: slategray;
     color: white;
+    margin: 5px;
 }
+
 .button:hover{
     background-color: rgb(5, 5, 5);
 }

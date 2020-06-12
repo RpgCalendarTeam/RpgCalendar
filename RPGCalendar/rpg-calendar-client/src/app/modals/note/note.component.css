@@ -1,6 +1,7 @@
 .btn1{
     float: right;
     background-color: rgb(211, 211, 211);
+    margin: 5px;
 }
 
 .btn1:hover{
@@ -28,6 +29,7 @@
 
 .matBtn,.matBtnCancel{
     background-color: rgba(211, 211, 211, 0.863);
+    margin: 5px;
 }
 
 .matBtn:hover{
