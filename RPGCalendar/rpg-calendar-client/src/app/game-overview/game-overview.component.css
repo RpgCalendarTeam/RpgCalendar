@@ -1,10 +1,14 @@
 .button{
     float: right;
-    background-color: slategray;
+    background-color: black;
     color: white;
     margin: 5px;
 }
 
 .button:hover{
-    background-color: rgb(5, 5, 5);
+    background-color: red;
+}
+
+.borderWrap{
+    color: red;
 }
