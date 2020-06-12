@@ -13,6 +13,7 @@ namespace RPGCalendar.Api
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -53,7 +54,7 @@ namespace RPGCalendar.Api
                     new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
                         .Build()));
-            });
+            }).AddNewtonsoftJson();
             services.AddSwaggerDocument();
 
             if (Env.IsProduction())
@@ -125,9 +126,8 @@ namespace RPGCalendar.Api
             services.AddAutoMapper(new[] { typeof(AutomapperConfigurationProfile).Assembly });
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-
+                options.Cookie.SameSite = SameSiteMode.None;
                 options.LoginPath = "/";
                 options.SlidingExpiration = true;
             });
@@ -147,6 +147,7 @@ namespace RPGCalendar.Api
                     options.IdleTimeout = TimeSpan.FromHours(1);
                     options.Cookie.HttpOnly = true;
                     options.Cookie.IsEssential = true;
+                    options.Cookie.SameSite = SameSiteMode.None;
                 }
 
             );

@@ -1,31 +1,99 @@
 <div class="container">
-  <form #createGameForm (submit)="submitGameForm()">
-    <div class="form-group">
-      <label for="gameName">Game Name</label>
-      <input ngModel name="gameName" #gameName="ngModel" class="form-control" />
-    </div>
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea
-        ngModel
-        name="description"
-        #description="ngModel"
-        id="description"
-        cols="30"
-        rows="10"
-        class="form-control"
-      ></textarea>
-    </div>
-    <div class="form-group">
-      <label for="numPlayers">Number of Players</label>
-      <input
-        type="number"
-        ngModel
-        name="numPLayers"
-        #numPlayers="ngModel"
-        class="form-control"
-      />
-    </div>
-    <button type="submit" class="button">Submit</button>
-  </form>
+  <div *ngIf="!next">
+    <form #gameDataForm="ngForm">
+      <div class="form-group">
+        <label for="gameName">Game Name</label>
+        <input ngModel name="gameName" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          name="description"
+          ngModel
+          id="description"
+          cols="30"
+          rows="10"
+          class="form-control"
+          required
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="gameSystem">Game System</label>
+        <input
+          type="text"
+          name="gameSystem"
+          ngModel
+          class="form-control"
+          required
+        />
+      </div>
+      <button type="submit" class="button" (click)="nextScreen()">Next</button>
+    </form>
+  </div>
+  <div *ngIf="next">
+    <form #calendarDataForm="ngForm">
+      <div class="form-group">
+        <label for="hourLength">Hour Length in Minutes</label>
+        <input
+          type="input"
+          name="hourLength"
+          [(ngModel)]="hourLength"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="dayLength">Day Length in Hours</label>
+        <input type="input" name="dayLength" [(ngModel)]="dayLength" required />
+        <tr>
+          <td>Months:</td>
+          <td *ngFor="let month of months">
+            {{ month.name }}, {{ month.lengthInDays }} |
+          </td>
+        </tr>
+        <button
+          *ngIf="!month"
+          type="button"
+          class="button"
+          (click)="showMonth()"
+        >
+          Add Month
+        </button>
+        <div *ngIf="month">
+          <label for="monthName">Month Name</label>
+          <input
+            type="input"
+            name="monthName"
+            [(ngModel)]="monthName"
+            required
+          />
+          <label for="monthLength">Month Length</label>
+          <input
+            type="tel"
+            name="monthLength"
+            [(ngModel)]="monthLength"
+            required
+          />
+          <button type="button" class="button" (click)="addMonth()">Add</button>
+        </div>
+        <tr>
+          <td>Week:</td>
+          <td *ngFor="let day of days">{{ day }} |</td>
+        </tr>
+        <button *ngIf="!day" type="button" class="button" (click)="showDay()">
+          Add Day
+        </button>
+        <div *ngIf="day">
+          <label for="dayName">Week Day Name</label>
+          <input type="input" name="dayName" [(ngModel)]="dayName" required />
+          <button type="button" class="button" (click)="addDay()">Add</button>
+        </div>
+      </div>
+      <div class="button-group">
+        <button type="button" class="button" (click)="prevScreen()">
+          Previous
+        </button>
+        <button type="submit" class="button" (click)="submit()">Submit</button>
+      </div>
+    </form>
+  </div>
 </div>

@@ -6,21 +6,18 @@ import { AuthService } from '../services/auth/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(private authService: AuthService, private router: Router) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
-
-  login(form){
+  login(form) {
     console.log(form.value);
-    this.authService.signIn(form.value).subscribe((res)=>{
-      console.log("Logged in!");
+    this.authService.signIn(form.value).subscribe((res) => {
+      console.log('Logged in!');
       this.router.navigateByUrl('gamelist');
-    });    
+    });
   }
-
 }
