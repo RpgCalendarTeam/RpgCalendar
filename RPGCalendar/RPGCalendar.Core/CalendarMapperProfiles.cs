@@ -70,7 +70,7 @@
                         src => src.HourLength))
                 .ForMember(des => des.DayLength,
                     opt => opt.MapFrom(
-                        src => src.HourLength))
+                        src => src.DayLength))
                 .ForMember(des => des.Months,
                     opt => opt.MapFrom(
                         src => BuildMonths(src.Months!)))

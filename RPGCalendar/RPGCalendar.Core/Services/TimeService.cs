@@ -31,7 +31,7 @@
 
 
         public async Task<Dto.Calendar?> ProceedTime(TimeChange timeChange)
-        {
+            {
 
             var game = await _gameService.GetById(_sessionService.GetCurrentGameId());
             Calendar? calendar = await _calendarRepository.FetchByIdAsync(game!.CalendarId);

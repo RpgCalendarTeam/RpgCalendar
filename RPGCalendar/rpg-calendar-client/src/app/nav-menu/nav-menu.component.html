@@ -21,29 +21,42 @@
       >
         <ul class="navbar-nav flex-grow">
           <li
+            *ngIf="!isLoggedIn"
             class="nav-item"
             [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <a class="nav-link text-white" [routerLink]="['/']">Home</a>
+            <a class="nav-link text-white" [routerLink]="['/']">Login</a>
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li
+            *ngIf="isLoggedIn && isGameInSession"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+          >
             <a class="nav-link text-white" [routerLink]="['/gameoverview']"
               >Overview</a
             >
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li
+            *ngIf="isLoggedIn"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+          >
             <a class="nav-link text-white" [routerLink]="['/gamelist']"
               >Game List</a
             >
           </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li
+            *ngIf="isLoggedIn && isGameInSession"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+          >
             <a class="nav-link text-white" [routerLink]="['/account']"
               >Account</a
             >
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a  class="nav-link text-white"[routerLink]="['/help']">Help</a>
+            <a class="nav-link text-white" [routerLink]="['/help']">Help</a>
           </li>
         </ul>
       </div>
