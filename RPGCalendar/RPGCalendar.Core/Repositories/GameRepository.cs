@@ -12,25 +12,28 @@
 
     public interface IGameRepository : IEntityRepository<Game>
     {
-        Task<Game?> AddNewGame(int gameId, User user);
+        Task<Game?> AddNewGame(int gameId, User user, string playerClass, string playerBio);
     }
     public class GameRepository : EntityRepository<Game>, IGameRepository
     {
-        private readonly ISessionService _sessionService;
-        private readonly IUserRepository _userRepository;
-        private readonly ICalendarRepository _calendarRepository;
 
-        public GameRepository(ISessionService sessionService, ApplicationDbContext dbContext, IUserRepository userRepository, ICalendarRepository calendarRepository)
+
+        public GameRepository(ApplicationDbContext dbContext)
             : base(dbContext)
         {
-            _sessionService = sessionService;
-            _userRepository = userRepository;
-            _calendarRepository = calendarRepository;
+
         }
 
         public override async Task<Game?> FetchByIdAsync(int id)
-            => (await FetchAllAsync())
-                .First(x => x.Id == id);
+            => await Query.Include(g => g.GameUsers)
+                .Include(g => g.Items)
+                .Include(g => g.Events)
+                .Include(g => g.Notes)
+                .Include(g => g.Notifications)
+                .Include(g => g.Calendar)
+                .Include(g => g.Calendar!.Months)
+                .Include(g => g.Calendar!.DaysOfWeek)
+                .FirstAsync(x => x.Id == id);
 
         public override async Task<List<Game>> FetchAllAsync() =>
             await Query.Include(g => g.GameUsers)
@@ -38,19 +41,21 @@
                 .Include(g => g.Events)
                 .Include(g => g.Notes)
                 .Include(g => g.Notifications)
-                .Include(g => g.GameTime)
+                .Include(g => g.Calendar)
+                .Include(g => g.Calendar!.Months)
+                .Include(g => g.Calendar!.DaysOfWeek)
                 .ToListAsync();
 
-        public async Task<Game?> AddNewGame(int gameId, User user)
+        public async Task<Game?> AddNewGame(int gameId, User user, string playerClass, string playerBio)
         {
             var game = await FetchByIdAsync(gameId);
             if (game is null || game.IsInGame(user.Id))
                 return game;
-            game.GameUsers.Add(new GameUser(user.Id, user, game.Id, game));
+            game.GameUsers.Add(new GameUser(user.Id, user, game.Id, game, playerClass, playerBio));
             await DbContext.SaveChangesAsync();
             return game;
         }
 
-            
+
     }
 }

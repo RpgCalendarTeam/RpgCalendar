@@ -1,0 +1,27 @@
+.h1{
+  text-align: center;
+  color: red;
+}
+
+#players{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#players td, #users th{
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#players tr:nth-child(even){background-color: darkslategray;}
+
+#players tr:hover{background-color: rgb(3, 3, 3);}
+
+#players th{
+  border: 1px solid #ddd;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: darkgray;
+  color: white;
+}

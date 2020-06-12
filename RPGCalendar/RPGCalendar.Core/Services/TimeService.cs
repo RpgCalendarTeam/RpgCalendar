@@ -1,44 +1,53 @@
 ﻿namespace RPGCalendar.Core.Services
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Microsoft.EntityFrameworkCore;
     using Data;
-    using Data.GameCalendar;
+    using Dto;
+    using Repositories;
+    using Calendar = Data.GameCalendar.Calendar;
+
     public interface ITimeService
     {
-        Task<Calendar?> FetchByIdAsync(int id);
-        Task<Calendar?> ProceedTime(int id, long second);
+        Task<Dto.Calendar?> ProceedTime(TimeChange timeChange);
     }
 
     public class TimeService : ITimeService
     {
-        protected ApplicationDbContext DbContext { get; }
+        private readonly IMapper _mapper;
+        private readonly ISessionService _sessionService;
+        private readonly IGameService _gameService;
+        private readonly ICalendarRepository _calendarRepository;
 
-        protected IMapper Mapper { get; }
 
-        protected virtual IQueryable<Calendar> Query => DbContext.Set<Calendar>();
-
-        public TimeService(ApplicationDbContext dbContext, IMapper mapper)
+        public TimeService(IMapper mapper, ISessionService sessionService, IGameService gameService, ICalendarRepository calendarRepository)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mapper = mapper;
+            _sessionService = sessionService;
+            _gameService = gameService;
+            _calendarRepository = calendarRepository;
         }
 
-        public virtual async Task<Calendar?> FetchByIdAsync(int id)
-        {
-            return Mapper.Map<Calendar>(await Query.FirstOrDefaultAsync(x => x.Id == id));
-        }
 
-        public virtual async Task<Calendar?> ProceedTime(int id, long sec)
-        {
-            Calendar? calendar = await FetchByIdAsync(id);
+        public async Task<Dto.Calendar?> ProceedTime(TimeChange timeChange)
+            {
+
+            var game = await _gameService.GetById(_sessionService.GetCurrentGameId());
+            Calendar? calendar = await _calendarRepository.FetchByIdAsync(game!.CalendarId);
             if (calendar == null) throw new NullReferenceException(nameof(calendar));
-            calendar.addTime(sec);
-            await DbContext.SaveChangesAsync();
-            return calendar;
+            if (timeChange.SetTime != null) 
+                calendar.CurrentTime = timeChange.SetTime.Value;
+            else
+            {
+                calendar.addSeconds(timeChange.Seconds ?? 0);
+                calendar.AddMins(timeChange.Minutes ?? 0);
+                calendar.AddHours(timeChange.Hours ?? 0);
+                calendar.AddDays(timeChange.Days ?? 0);
+                calendar.AddYears(timeChange.Years ?? 0);
+            }
+            await _calendarRepository.UpdateAsync(calendar.Id, calendar);
+            return _mapper.Map<Dto.Calendar>(calendar);
         }
     }
 }

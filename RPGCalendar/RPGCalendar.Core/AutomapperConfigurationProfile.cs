@@ -1,5 +1,7 @@
 ﻿namespace RPGCalendar.Core
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using AutoMapper;
     using Data;
@@ -22,16 +24,13 @@
             CreateMap<Dto.NotificationInput, Notification>();
             CreateMap<Notification, Dto.Notification>();
 
-            CreateMap<Dto.GameInput, Game>();
+            CreateMap<Dto.GameInput, Game>().ForMember(des => des.Calendar, 
+                opt => opt.Ignore());
             CreateMap<Game, Dto.Game>();
 
             CreateMap<Dto.UserInput, User>();
             CreateMap<User, Dto.User>();
 
-            CreateMap<Dto.CalendarInput, Calendar>();
-            CreateMap<Calendar, Dto.Calendar>();
-            //CreateMap<Calendar, Dto.Calendar>().ForMember(des => des.Months,
-            //    opt => opt.MapFrom(src => src.Months));
         }
 
         public static IMapper CreateMapper()

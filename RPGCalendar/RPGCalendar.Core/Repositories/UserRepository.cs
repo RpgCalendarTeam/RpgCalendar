@@ -28,7 +28,7 @@
 
         public override async Task<User?> FetchByIdAsync(int id)
         {
-            var user = await Query.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await Query.Include(u => u.GameUsers).FirstOrDefaultAsync(x => x.Id == id);
             return user;
         }
 

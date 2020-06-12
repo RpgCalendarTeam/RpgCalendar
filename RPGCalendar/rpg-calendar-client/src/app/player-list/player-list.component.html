@@ -1,0 +1,25 @@
+<table id="players">
+  <th class="header" *ngFor="let column of headers">
+    {{ column }}
+  </th>
+  <tr *ngFor="let player of players">
+    <td>
+      {{ player.id }}
+    </td>
+    <td>
+      {{ player.username }}
+    </td>
+    <td *ngIf="player.class">
+      {{ player.class }}
+    </td>
+    <td *ngIf="!player.class">
+      Game Master
+    </td>
+    <td>
+      {{ player.bio }}
+    </td>
+    <td>
+      <button (click)="setUserId(player.id)">Profile</button>
+    </td>
+  </tr>
+</table>

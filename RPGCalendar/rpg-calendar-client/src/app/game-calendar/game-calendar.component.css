@@ -1,0 +1,40 @@
+.calContainer {
+  display: flex;
+  border-style: solid;
+  background-color: black;
+  justify-content: space-around;
+  height: 500px;
+}
+
+.dateContainer {
+  flex-direction: column;
+  
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+}
+.calendarHeader {
+  text-align: center;
+}
+.off-two .off-one {
+  border-style: solid;
+  
+  text-align: center;
+}
+
+.off-one {
+  color: white;
+}
+
+.off-two {
+  color: whitesmoke;
+  font-style: normal;
+}
+
+.primary {
+  border-bottom-style: solid;
+  border-top-style: solid;
+  width: 20%;
+  color: red;
+  text-align: center;
+}

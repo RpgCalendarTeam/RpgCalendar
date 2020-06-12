@@ -1,0 +1,10 @@
+.mainBox{
+    border-color: red;
+    border-bottom-style: groove;
+    color: white
+}
+.header{
+    font-style: oblique;
+    border-bottom-style: groove;
+    border-color: red;
+}

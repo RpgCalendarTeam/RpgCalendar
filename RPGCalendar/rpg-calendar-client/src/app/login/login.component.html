@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="logo">Login</div>
+    <div class="login-item">
+      <form #myform="ngForm" (ngSubmit)="login(myform)" class="form form-login">
+        <div class="form-field">
+          <label class="user" for="login-email"><span class="hidden">Email</span></label>
+          <input name="email" id="login-email" type="email" class="form-input" placeholder="Email" required ngModel>
+        </div>
+
+        <div class="form-field">
+          <label class="lock" for="login-password"><span class="hidden">Password</span></label>
+          <input name="password" id="login-password" type="password" class="form-input" placeholder="Password" required ngModel>
+        </div>
+        <p>
+          <input type="submit" value="Log in">
+        </p>
+        <a class="sign-up" href="/register"> 
+          Create Account
+        </a>
+        <p>
+        </p>
+        <a class="passwordReset" href="/forgot-password">
+          Forgot Password?
+        </a>
+      </form>
+    </div>
+    <p>The <code>RPGCalendar</code> was created by Mark Studor, Emilio Campos, Gustavo Leyva,& Andrew Yoo.</p>
+</div>

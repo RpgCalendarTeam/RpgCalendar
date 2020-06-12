@@ -4,21 +4,25 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data;
     using Data.Exceptions;
     using Data.Joins;
+    using Dto;
     using Exceptions;
     using Repositories;
+    using Calendar = Data.GameCalendar.Calendar;
+    using Game = Data.Game;
+    using User = Data.User;
 
     public interface IGameService
     {
-        Task<Dto.Game?> AddNew(int gameId);
-        Task<Dto.Game?> CreateAsync(Dto.GameInput dto);
+        Task<Dto.Game?> AddNew(int gameId, PlayerInfo playerInfo);
+        Task<Dto.Game?> CreateAsync(Dto.GameInput input);
         Task<List<Dto.Game>> GetForUserAsync();
         Task<Dto.Game?> GetByIdForUserAsync(int id);
         Task<Dto.Game?> UpdateAsync(int id, Dto.GameInput entity);
         Task<bool> DeleteAsync(int id);
         Task<Game?> GetById(int gameId);
+        Task<Dto.Game?> GetCurrentGameAsync();
 
     }
     public class GameService : IGameService
@@ -26,16 +30,16 @@
         private readonly ISessionService _sessionService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
-        private readonly ICalendarService _calendarService;
         private readonly IGameRepository _gameRepository;
+        private readonly ICalendarRepository _calendarRepository;
 
-        public GameService(ISessionService sessionService, IMapper mapper, IUserService userService, ICalendarService calendarService, IGameRepository gameRepository)
+        public GameService(ISessionService sessionService, IMapper mapper, IUserService userService, IGameRepository gameRepository, ICalendarRepository calendarRepository)
         {
             _sessionService = sessionService;
             _mapper = mapper;
             _userService = userService;
-            _calendarService = calendarService;
             _gameRepository = gameRepository;
+            _calendarRepository = calendarRepository;
         }
 
         public async Task<List<Dto.Game>> GetForUserAsync()
@@ -56,15 +60,21 @@
             return _mapper.Map<Game, Dto.Game>(game);
         }
 
-        public async Task<Dto.Game?> CreateAsync(Dto.GameInput dto)
+        public async Task<Dto.Game?> CreateAsync(Dto.GameInput input)
         {
-            Game entity = _mapper.Map<Dto.GameInput, Game>(dto);
+            Game entity = _mapper.Map<Dto.GameInput, Game>(input);
             int userId = _sessionService.GetCurrentUserId();
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
             entity.GameMaster = user.Id;
             entity.GameUsers.Add(new GameUser(user.Id, user, entity.Id, entity));
-            await _calendarService.InsertAsync(dto.GameTime!);
             await _gameRepository.InsertAsync(entity);
+            Calendar calendar = _mapper.Map<Calendar>(input.Calendar);
+            calendar.Game = entity;
+            calendar.GameId = entity.Id;
+            await _calendarRepository.InsertAsync(calendar);
+            entity.Calendar = calendar;
+            entity.CalendarId = calendar.Id;
+            await _gameRepository.UpdateAsync(entity.Id, entity);
             _sessionService.SetCurrentGameId(entity.Id);
             return _mapper.Map<Game, Dto.Game>(entity);
         }
@@ -81,12 +91,12 @@
         public Task<bool> DeleteAsync(int id)
             => _gameRepository.DeleteAsync(id);
 
-        public async Task<Dto.Game?> AddNew(int gameId)
+        public async Task<Dto.Game?> AddNew(int gameId, PlayerInfo player)
         {
             var userId = _sessionService.GetCurrentUserId();
             User user = await _userService.GetUserById(userId) ?? throw new IllegalStateException(nameof(User));
 
-            var game = await _gameRepository.AddNewGame(gameId, user);
+            var game = await _gameRepository.AddNewGame(gameId, user, player.Class, player.Bio);
 
             if (game is null)
                 return null;
@@ -95,9 +105,16 @@
             return _mapper.Map<Game, Dto.Game>(game);
         }
 
-
-
         public Task<Game?> GetById(int gameId)
             => _gameRepository.FetchByIdAsync(gameId);
+
+        public async Task<Dto.Game?> GetCurrentGameAsync()
+        {
+            var gameId = _sessionService.GetCurrentGameId();
+            var game = await _gameRepository.FetchByIdAsync(gameId);
+            if (game is null)
+                return null;
+            return _mapper.Map<Dto.Game>(game);
+        }
     }
 }

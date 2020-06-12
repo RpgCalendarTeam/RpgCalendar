@@ -4,6 +4,8 @@
     public class ItemInput
     {
         [Required]
+        public int UserId { get; set; }
+        [Required]
         public string? Name { get; set; }
         [Required]
         public string? Description { get; set; }
@@ -12,9 +14,9 @@
         [Required]
         public decimal Quality { get; set; }
         [Required]
-        public decimal QuanityDegration { get; set; }
+        public decimal QuantityDenigration { get; set; }
         [Required]
-        public decimal QualityDegration { get; set; }
+        public decimal QualityDenigration { get; set; }
     }
 
     public class Item : ItemInput, IEntity

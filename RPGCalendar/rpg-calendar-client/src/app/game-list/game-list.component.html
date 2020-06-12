@@ -1,0 +1,64 @@
+<div>
+  <button class="button" (click)="createGame()">
+    Create Game
+  </button>
+</div>
+<div class="div1">
+  <h1>My Games</h1>
+  <div *ngIf="games">
+    <form #gamelistform (submit)="selectGameSubmitted()">
+      <table id="games">
+        <th class="header" *ngFor="let column of headers">
+          {{ column }}
+        </th>
+        <tr *ngFor="let game of games">
+          <td>{{ game.id }}</td>
+          <td>{{ game.title }}</td>
+          <td>{{ game.gameSystem }}</td>
+          <td>{{ game.description }}</td>
+          <td>
+            <input type="button" (click)="selectGame(game.id)" value="Join" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <h2 *ngIf="!games">
+    Sorry there are no available games at this time.
+  </h2>
+</div>
+<br />
+<div>
+  <h1>Add a game</h1>
+  <form #addGameForm="ngForm" (submit)="addGame()">
+    <tr>
+      <td>Player Class:</td>
+      <td>
+        <input
+          type="text"
+          name="playerClass"
+          [(ngModel)]="playerClass"
+          required
+        />
+      </td>
+    </tr>
+    <tr>
+      <td>Player Bio:</td>
+      <td>
+        <input
+          type="textarea"
+          name="playerBio"
+          [(ngModel)]="playerBio"
+          required
+        />
+      </td>
+    </tr>
+    <tr>
+      <td>Game Id:</td>
+      <td><input type="tel" name="gameId" required [(ngModel)]="gameId" /></td>
+    </tr>
+    <tr>
+      <td colspan="2"><button value="Add" type="submit">Add</button></td>
+    </tr>
+  </form>
+</div>

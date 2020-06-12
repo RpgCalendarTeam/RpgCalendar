@@ -3,6 +3,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using RPGCalendar.Data;
 
 namespace RPGCalendar.Data.Migrations.SqlServerMigrations
 {
@@ -24,6 +26,12 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CalendarId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CalendarId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,9 +50,6 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GameTimeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -58,7 +63,7 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameTimeId");
+                    b.HasIndex("CalendarId1");
 
                     b.ToTable("Games");
                 });
@@ -77,10 +82,89 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Days")
+                    b.Property<long>("CurrentTime")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("DayLength")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("HourLength")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DaysInWeek")
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId")
+                        .IsUnique();
+
+                    b.ToTable("Calendars");
+                });
+
+            modelBuilder.Entity("RPGCalendar.Data.GameCalendar.Day", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CalendarId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CalendarId");
+
+                    b.ToTable("Days");
+                });
+
+            modelBuilder.Entity("RPGCalendar.Data.GameCalendar.Month", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CalendarId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LengthInDays")
                         .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
@@ -90,21 +174,18 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Months")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MonthsInYear")
-                        .HasColumnType("int");
-
-                    b.Property<long>("Time")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("WeeksInMonth")
+                    b.Property<int>("Order")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Calendars");
+                    b.HasIndex("CalendarId");
+
+                    b.ToTable("Months");
                 });
 
             modelBuilder.Entity("RPGCalendar.Data.GameObjects.Event", b =>
@@ -198,6 +279,9 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
 
                     b.Property<decimal>("QuantityDegradation")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -312,6 +396,12 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PlayerBio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlayerClass")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("GameId", "UserId");
 
                     b.HasIndex("UserId");
@@ -359,9 +449,32 @@ namespace RPGCalendar.Data.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("RPGCalendar.Data.Game", b =>
                 {
-                    b.HasOne("RPGCalendar.Data.GameCalendar.Calendar", "GameTime")
+                    b.HasOne("RPGCalendar.Data.GameCalendar.Calendar", "Calendar")
                         .WithMany()
-                        .HasForeignKey("GameTimeId");
+                        .HasForeignKey("CalendarId1");
+                });
+
+            modelBuilder.Entity("RPGCalendar.Data.GameCalendar.Calendar", b =>
+                {
+                    b.HasOne("RPGCalendar.Data.Game", "Game")
+                        .WithOne()
+                        .HasForeignKey("RPGCalendar.Data.GameCalendar.Calendar", "GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RPGCalendar.Data.GameCalendar.Day", b =>
+                {
+                    b.HasOne("RPGCalendar.Data.GameCalendar.Calendar", null)
+                        .WithMany("DaysOfWeek")
+                        .HasForeignKey("CalendarId");
+                });
+
+            modelBuilder.Entity("RPGCalendar.Data.GameCalendar.Month", b =>
+                {
+                    b.HasOne("RPGCalendar.Data.GameCalendar.Calendar", null)
+                        .WithMany("Months")
+                        .HasForeignKey("CalendarId");
                 });
 
             modelBuilder.Entity("RPGCalendar.Data.GameObjects.Event", b =>

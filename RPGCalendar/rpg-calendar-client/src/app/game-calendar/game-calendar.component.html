@@ -1,0 +1,67 @@
+<div class="borderWrap" *ngIf="calendar">
+  <h3 class="calendarHeader">{{ calendar.formattedDate }}</h3>
+  <div class="calendarContainer calContainer">
+    <div class="off-two dateContainer">
+      <div>{{ calendar.fullYear - 2 }}</div>
+      <div>{{ getMonthName(-2) }}</div>
+      <div>{{ getWeekName(-2) }}</div>
+      <div>{{ getDate(-2) }}</div>
+      <div>&nbsp;</div>
+    </div>
+    <div class="off-one dateContainer">
+      <div>{{ calendar.fullYear - 1 }}</div>
+      <div>{{ getMonthName(-1) }}</div>
+      <div>{{ getWeekName(-1) }}</div>
+      <div>{{ getDate(-1) }}</div>
+      <div>&nbsp;</div>
+    </div>
+    <div class="primary dateContainer">
+      <div>{{ calendar.fullYear }}</div>
+      <div>{{ calendar.monthName }}</div>
+      <div>{{ calendar.day }}</div>
+      <div>{{ calendar.date }}</div>
+      <div>{{ calendar.hour }}:{{ calendar.minute }}</div>
+    </div>
+    <div class="off-one dateContainer">
+      <div>{{ calendar.fullYear + 1 }}</div>
+      <div>{{ getMonthName(1) }}</div>
+      <div>{{ getWeekName(1) }}</div>
+      <div>{{ getDate(1) }}</div>
+      <div>&nbsp;</div>
+    </div>
+    <div class="off-two dateContainer">
+      <div>{{ calendar.fullYear + 2 }}</div>
+      <div>{{ getMonthName(2) }}</div>
+      <div>{{ getWeekName(2) }}</div>
+      <div>{{ getDate(2) }}</div>
+      <div>&nbsp;</div>
+    </div>
+  </div>
+  <button *ngIf="!time" class="button" (click)="addTime()">Add Time</button>
+
+  <form *ngIf="time" #progressTimeForm="ngForm" (submit)="submitTimeForm()">
+    <div class="form-group">
+      <label for="years">Years</label>
+      <input ngModel name="years" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="days">Days</label>
+      <input ngModel name="days" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="hours">Hours</label>
+      <input ngModel name="hours" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="minutes">Minutes</label>
+      <input ngModel name="minutes" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="seconds">Seconds</label>
+      <input ngModel name="seconds" class="form-control" required />
+    </div>
+    <button type="submit" class="button">Next</button>
+  </form>
+
+  <div></div>
+</div>

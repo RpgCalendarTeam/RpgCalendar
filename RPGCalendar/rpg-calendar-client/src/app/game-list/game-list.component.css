@@ -1,0 +1,37 @@
+#games{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: white;
+    width: 1000px;
+    border-style: double;
+}
+
+#games td, #games th{
+    border: 2px solid #ddd;
+    padding: 8px;
+}
+
+#games tr:hover{
+    background-color: rgb(0, 0, 0);
+}
+
+#games th{
+border: 1px solid rgb(238, 4, 4);   
+padding-top: 12px;
+padding-bottom: 12px;
+text-align: left;
+background-color: rgb(247, 3, 3);
+color: white;
+}
+
+.button{
+    float: right;
+    background-color: white;
+    color: red;
+}
+.button:hover{
+    background-color: black;
+}
+
+.div1{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}

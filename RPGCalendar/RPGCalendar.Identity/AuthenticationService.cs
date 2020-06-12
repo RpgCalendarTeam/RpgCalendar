@@ -8,6 +8,12 @@
     {
         Task<string?> Login(LoginModel model);
         Task<string?> Register(RegistrationModel model);
+        Task Logout();
+        Task<ApplicationUser> FindByEmailAsync(string email);
+        Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
+        Task<string?> ChangePassword(string userEmail, string currentPassword, string newPassword);
+        Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string password);
+
     }
 
     public class AuthenticationService : IAuthenticationService
@@ -23,25 +29,14 @@
         }
         public async Task<string?> Login(LoginModel model)
         {
-            if (model.Email is null && model.Username is null)
+            if (model.Email is null)
                 return null;
-            string? userId = null;
-            if (model.Username is { })
-            {
-                var result = await _signInManager.PasswordSignInAsync(model.Username,
-                    model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                    userId = (await _userManager.Users.FirstAsync(ur => ur.UserName == model.Username)).Id;
-            }
-            else if(model.Email is { })
-            {
-                var user = await _userManager.Users.FirstAsync(ur => ur.Email == model.Email);
-                var result = await _signInManager.PasswordSignInAsync(user.UserName,
-                    model.Password, model.RememberMe, lockoutOnFailure: false);
-                userId = user.Id;
-            }
-
-            return userId;
+            var user = await _userManager.Users.FirstAsync(ur => ur.Email == model.Email);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName,
+                model.Password, model.RememberMe, lockoutOnFailure: false);
+            return result.Succeeded
+                ? user.Id
+                : null;
         }
 
         public async Task<string?> Register(RegistrationModel model)
@@ -56,6 +51,37 @@
             return user.Id;
 
 
+        }
+
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        public async Task<string?> ChangePassword(string userEmail, string currentPassword, string newPassword)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(userEmail);
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (result is null)
+                return null;
+            if (!result.Succeeded)
+                return "Error: " + result.ToString();
+            return result.ToString();
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<ApplicationUser> FindByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
         }
     }
 }

@@ -1,0 +1,65 @@
+<header>
+  <nav
+    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3"
+  >
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">RPGCalendar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-label="Toggle navigation"
+        [attr.aria-expanded]="isExpanded"
+        (click)="toggle()"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
+        [ngClass]="{ show: isExpanded }"
+      >
+        <ul class="navbar-nav flex-grow">
+          <li
+            *ngIf="!isLoggedIn"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="nav-link text-white" [routerLink]="['/']">Login</a>
+          </li>
+          <li
+            *ngIf="isLoggedIn && isGameInSession"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+          >
+            <a class="nav-link text-white" [routerLink]="['/gameoverview']"
+              >Overview</a
+            >
+          </li>
+          <li
+            *ngIf="isLoggedIn"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+          >
+            <a class="nav-link text-white" [routerLink]="['/gamelist']"
+              >Game List</a
+            >
+          </li>
+          <li
+            *ngIf="isLoggedIn && isGameInSession"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+          >
+            <a class="nav-link text-white" [routerLink]="['/account']"
+              >Account</a
+            >
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-white" [routerLink]="['/help']">Help</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
