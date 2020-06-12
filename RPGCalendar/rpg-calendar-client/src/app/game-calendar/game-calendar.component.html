@@ -1,3 +1,40 @@
 <div class="borderWrap">
-  <h2 class="month-name">{{ calendar.monthName }}</h2>
+  <h3 class="calendarHeader">{{ calendar.formattedDate }}</h3>
+  <div class="calendarContainer calContainer">
+    <div class="off-two dateContainer">
+      <div>{{ calendar.fullYear - 2 }}</div>
+      <div>{{ getMonthName(-2) }}</div>
+      <div>{{ getWeekName(-2) }}</div>
+      <div>{{ getDate(-2) }}</div>
+      <div>&nbsp;</div>
+    </div>
+    <div class="off-one dateContainer">
+      <div>{{ calendar.fullYear - 1 }}</div>
+      <div>{{ getMonthName(-1) }}</div>
+      <div>{{ getWeekName(-1) }}</div>
+      <div>{{ getDate(-1) }}</div>
+      <div>&nbsp;</div>
+    </div>
+    <div class="primary dateContainer">
+      <div>{{ calendar.fullYear }}</div>
+      <div>{{ calendar.monthName }}</div>
+      <div>{{ calendar.day }}</div>
+      <div>{{ calendar.date }}</div>
+      <div>{{ calendar.hour }}:{{ calendar.minute }}</div>
+    </div>
+    <div class="off-one dateContainer">
+      <div>{{ calendar.fullYear + 1 }}</div>
+      <div>{{ getMonthName(1) }}</div>
+      <div>{{ getWeekName(1) }}</div>
+      <div>{{ getDate(1) }}</div>
+      <div>&nbsp;</div>
+    </div>
+    <div class="off-two dateContainer">
+      <div>{{ calendar.fullYear + 2 }}</div>
+      <div>{{ getMonthName(2) }}</div>
+      <div>{{ getWeekName(2) }}</div>
+      <div>{{ getDate(2) }}</div>
+      <div>&nbsp;</div>
+    </div>
+  </div>
 </div>

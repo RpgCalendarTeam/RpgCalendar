@@ -10,6 +10,17 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
   private actionUrl = 'api/User';
 
+  selectedUserId: number;
+  SetUserId(id: number) {
+    this.selectedUserId = id;
+  }
+  GetSelectedUser(): Observable<Player> {
+    if (this.selectedUserId) {
+      return this.httpClient.get<Player>(
+        this.actionUrl + '/user/' + this.selectedUserId
+      );
+    }
+  }
   GetCurrentUser(): Observable<Player> {
     return this.httpClient.get<Player>(this.actionUrl);
   }
