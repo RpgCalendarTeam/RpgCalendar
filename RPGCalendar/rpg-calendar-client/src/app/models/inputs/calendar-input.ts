@@ -4,5 +4,5 @@ export class CalendarInput {
   hourLength: number;
   dayLength: number;
   months: MonthInput[];
-  days: string[];
+  daysOfWeek: string[];
 }
